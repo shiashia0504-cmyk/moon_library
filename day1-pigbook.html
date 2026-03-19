@@ -940,52 +940,34 @@ function openChallenge(){
 }
 
 // ── 도전 미션 제출
+const GAS_URL='https://script.google.com/macros/s/AKfycbylc9JZqMEuHV6NcWByRaKpyhzBljAOyQun24ZCJ9pkiw1xBcfd7M0sRRZBu1U63Xur/exec';
+
 async function submitChallenge(){
   const answers=CHALLENGE_QS.map((_,i)=>{
     const el=document.getElementById(`challenge-ans-${i}`);
     return el?el.value.trim():'';
   });
-
   const btn=document.getElementById('challenge-submit-btn');
   const status=document.getElementById('challenge-status');
   btn.disabled=true;
   status.textContent='📨 제출 중...';status.style.color='var(--ink)';
-
   const now=new Date().toLocaleString('ko-KR',{timeZone:'Asia/Seoul'});
   const answerText=CHALLENGE_QS.map((q,i)=>
     `Q${i+1}. ${q}\n답변: ${answers[i]||'(미작성)'}`
   ).join('\n\n');
-
-  const prompt=`아래 정보로 Gmail을 통해 shiashia0504@gmail.com 으로 이메일을 보내줘.
-
-수신: shiashia0504@gmail.com
-제목: [${reporterName}] 소요도서관 달빛독서 도전
-
-본문:
-━━━━━━━━━━━━━━━━━━━━
-🔥 달빛 기자단 도전 미션 답변
-━━━━━━━━━━━━━━━━━━━━
-기자 이름: ${reporterName}
-제출 시각: ${now}
-책 제목: 돼지책 (앤서니 브라운)
-
-${answerText}
-━━━━━━━━━━━━━━━━━━━━
-소요도서관 달빛 취재 게임 자동 발송`;
-
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
-        mcp_servers:[{type:'url',url:'https://gmail.mcp.claude.com/mcp',name:'gmail'}],
-        messages:[{role:'user',content:prompt}]})
+    await fetch(GAS_URL,{
+      method:'POST',mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        subject:`[${reporterName}] 소요도서관 달빛독서 도전`,
+        body:`━━━━━━━━━━━━━━━━━━━━\n🔥 달빛 기자단 도전 미션 답변\n━━━━━━━━━━━━━━━━━━━━\n기자 이름: ${reporterName}\n제출 시각: ${now}\n책 제목: 돼지책 (앤서니 브라운)\n\n${answerText}\n━━━━━━━━━━━━━━━━━━━━\n소요도서관 달빛 취재 게임 자동 발송`
+      })
     });
-    if(res.ok){
-      status.textContent='✅ 선생님께 제출됐어요! 수고했어요 🌙';
-      status.style.color='var(--green)';
-      btn.textContent='✅ 제출 완료!';
-      launchConfetti(2);
-    } else throw new Error();
+    status.textContent='✅ 선생님께 제출됐어요! 수고했어요 🌙';
+    status.style.color='var(--green)';
+    btn.textContent='✅ 제출 완료!';
+    launchConfetti(2);
   }catch{
     status.textContent='⚠️ 전송 실패. 선생님께 직접 보여주세요!';
     status.style.color='var(--red)';
@@ -998,42 +980,26 @@ function showComboPopup(n){
   setTimeout(()=>{el.style.opacity='0';},900);
 }
 
-// ══ Gmail 전송 ══
+// ══ 결과 전송 (Google Apps Script) ══
 async function sendResultEmail(name,sc,lv,rank){
   const el=document.getElementById('email-status');
   el.textContent='📨 결과 전송 중...';el.style.color='var(--ink)';
   const now=new Date().toLocaleString('ko-KR',{timeZone:'Asia/Seoul'});
-  const todayWord = DAY_WORDS[todayDay-1].replace(/✦/g,'').trim();
-  const prompt=`아래 정보로 Gmail을 통해 shiashia0504@gmail.com 으로 이메일을 보내줘.
-
-수신: shiashia0504@gmail.com
-제목: [${name}] 소요도서관 달빛독서 기본
-
-본문:
-━━━━━━━━━━━━━━━━━━━━
-🌙 소요도서관 어린이 기자단 달빛 취재 결과
-━━━━━━━━━━━━━━━━━━━━
-기자 이름: ${name}
-완료 시각: ${now}
-오늘 일차: ${todayDay}일차
-최종 점수: ${sc}점
-남은 목숨: ${'❤️'.repeat(lv)}${'🖤'.repeat(MAX_LIVES-lv)}
-등급: ${rank}
-
-🔐 오늘 획득한 단어: ${todayWord}
-━━━━━━━━━━━━━━━━━━━━
-소요도서관 달빛 취재 게임 자동 발송`;
+  const todayWord=DAY_WORDS[todayDay-1].replace(/✦/g,'').trim();
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
-        mcp_servers:[{type:'url',url:'https://gmail.mcp.claude.com/mcp',name:'gmail'}],
-        messages:[{role:'user',content:prompt}]})
+    await fetch(GAS_URL,{
+      method:'POST',mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        subject:`[${name}] 소요도서관 달빛독서 기본`,
+        body:`━━━━━━━━━━━━━━━━━━━━\n🌙 소요도서관 어린이 기자단 달빛 취재 결과\n━━━━━━━━━━━━━━━━━━━━\n기자 이름: ${name}\n완료 시각: ${now}\n오늘 일차: ${todayDay}일차\n최종 점수: ${sc}점\n남은 목숨: ${'❤️'.repeat(lv)}${'🖤'.repeat(MAX_LIVES-lv)}\n등급: ${rank}\n\n🔐 오늘 획득한 단어: ${todayWord}\n━━━━━━━━━━━━━━━━━━━━\n소요도서관 달빛 취재 게임 자동 발송`
+      })
     });
-    el.textContent=res.ok?'✅ 선생님께 결과가 전송됐어요!':'⚠️ 전송 실패. 선생님께 직접 알려주세요!';
-    el.style.color=res.ok?'var(--green)':'var(--red)';
+    el.textContent='✅ 선생님께 결과가 전송됐어요!';
+    el.style.color='var(--green)';
   }catch{
-    el.textContent='⚠️ 전송 실패. 선생님께 직접 알려주세요!';el.style.color='var(--red)';
+    el.textContent='⚠️ 전송 실패. 선생님께 직접 알려주세요!';
+    el.style.color='var(--red)';
   }
 }
 
