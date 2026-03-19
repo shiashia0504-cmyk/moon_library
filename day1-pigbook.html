@@ -330,7 +330,7 @@ body{
       box-shadow:inset 0 2px 8px #00000044;
       position:relative;overflow:hidden">
       <div style="font-family:'Jua',sans-serif;font-size:11px;color:#c8a060;letter-spacing:2px;text-align:center;margin-bottom:4px">📌 달빛 취재 지도</div>
-      <div id="world-map-svg" style="max-height:220px;overflow:hidden"></div>
+      <div id="world-map-svg" style="width:100%"></div>
       <div id="today-region-badge"></div>
     </div>
 
@@ -545,7 +545,7 @@ function renderWorldMap(){
   ];
 
   // viewBox: 위쪽(라벨 공간) 넉넉히, 양옆도 여유
-  let svg=`<svg viewBox="-20 -45 ${W+40} ${H+60}" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block">
+  let svg=`<svg viewBox="-25 -60 ${W+50} ${H+90}" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block">
   <defs>
     <filter id="ps"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000" flood-opacity=".6"/></filter>
     <filter id="gs"><feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#4ade80" flood-opacity=".5"/></filter>
@@ -591,8 +591,8 @@ function renderWorldMap(){
 
     const lines=r.name.split('\n');
     // 한글은 글자당 약 13px (영문보다 넓음)
-    const lw=Math.max(...lines.map(l=>[...l].length))*13+16;
-    const lh=lines.length>1?30:19;
+    const lw=Math.max(...lines.map(l=>[...l].length))*14+18;
+    const lh=lines.length>1?32:20;
     // 라벨 위치 — 핀 위
     const lx=x-lw/2, ly=y-lh-26;
 
@@ -606,9 +606,9 @@ function renderWorldMap(){
     svg+=`<g opacity="${labelOp}">
       <rect x="${lx}" y="${ly}" width="${lw}" height="${lh}" rx="3"
         fill="${labelBg}" stroke="${labelBorder}" stroke-width="1.2"/>
-      <text x="${x}" y="${ly+11}" text-anchor="middle" font-size="10"
+      <text x="${x}" y="${ly+11}" text-anchor="middle" font-size="11"
         font-family="Jua,sans-serif" fill="${labelColor}">${lines[0]}</text>
-      ${lines[1]?`<text x="${x}" y="${ly+22}" text-anchor="middle" font-size="10"
+      ${lines[1]?`<text x="${x}" y="${ly+22}" text-anchor="middle" font-size="11"
         font-family="Jua,sans-serif" fill="${labelColor}">${lines[1]}</text>`:''}
     </g>`;
 
