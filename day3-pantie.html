@@ -575,9 +575,9 @@ const REGIONS = [
 
 // ══ 도전 문제 (서술형) ══
 const CHALLENGE_QS = [
-  '김 부자는 왜 나쁜 사람일까요? 내 생각을 자유롭게 써봐요!',
-  '만약 내가 도깨비라면 김 부자에게 어떤 벌을 줬을까요?',
-  '착하게 살면 복을 받는다는 말, 내 생각은 어때요?',
+  '재스퍼는 팬티가 무섭지 않다고 했지만 사실 무서웠을까요? 재스퍼의 마음이 어땠을 것 같아요?',
+  '만약 내가 재스퍼라면 오싹오싹 팬티를 어떻게 했을까요?',
+  '무섭거나 싫었던 것이 나중에 좋아진 경험이 있나요? 내 이야기를 써봐요!',
 ];
 
 // SVG 지도 렌더 — 코르크 보드 + 핀 + 불규칙 지형
@@ -647,6 +647,7 @@ function renderWorldMap(){
     // 라벨 위치 — 핀 위
     const lx=x-lw/2, ly=y-lh-26;
 
+
     // 오늘 맥동 링
     if(state==='today'){
       svg+=`<circle cx="${x}" cy="${y}" r="18" fill="none" stroke="#f7e96a55" stroke-width="2"
@@ -682,6 +683,7 @@ function renderWorldMap(){
     // 일차 라벨 (핀 아래)
     svg+=`<text x="${x}" y="${y+22}" text-anchor="middle" font-size="9"
       font-family="Jua,sans-serif" fill="${labelColor}" opacity="${labelOp*.8}">${r.desc}</text>`;
+
   });
 
   svg+=`</svg>`;
