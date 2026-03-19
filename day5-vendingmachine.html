@@ -663,9 +663,6 @@ function renderWorldMap(){
     // 라벨 위치 — 핀 위
     const lx=x-lw/2, ly=y-lh-26;
 
-    // done 상태면 클릭 가능하게 감싸기
-    const isClickable = state === 'done';
-    if(isClickable) svg+=`<g style="cursor:pointer" onclick="window.location.href='${DAY_FILES[i]}'" title="${r.name.replace('\n',' ')} 다시 하기">`;
 
     // 오늘 맥동 링
     if(state==='today'){
@@ -703,13 +700,14 @@ function renderWorldMap(){
     svg+=`<text x="${x}" y="${y+22}" text-anchor="middle" font-size="9"
       font-family="Jua,sans-serif" fill="${labelColor}" opacity="${labelOp*.8}">${r.desc}</text>`;
 
-    // done이면 다시하기 라벨
-    if(isClickable){
+    // done 상태면 다시하기 라벨 + 클릭
+    if(state==='done'){
       svg+=`<text x="${x}" y="${y+33}" text-anchor="middle" font-size="8"
         font-family="Jua,sans-serif" fill="#4ade80" opacity=".8">↩ 다시하기</text>`;
-      svg+=`</g>`; // clickable group 닫기
+      svg+=`<rect x="${x-22}" y="${ly}" width="44" height="${y+35-ly}" fill="transparent" style="cursor:pointer" onclick="window.location.href=DAY_FILES[${i}]"/>`;
     }
-  }); // REGIONS.forEach 끝
+
+  });
 
   svg+=`</svg>`;
   el.innerHTML=svg;
@@ -723,6 +721,7 @@ function renderWorldMap(){
   }
 }
 
+// ── 이름
 // 이전 날짜 파일 링크
 const DAY_FILES = [
   'day1-pigbook.html',
@@ -731,8 +730,6 @@ const DAY_FILES = [
   'day4-dragon.html',
   'day5-vendingmachine.html',
 ];
-
-// ── 이름
 function onNameInput(v){
   const t=v.trim();
   document.getElementById('pid-name-preview').textContent=t||'?';

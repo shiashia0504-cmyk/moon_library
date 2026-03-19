@@ -684,6 +684,13 @@ function renderWorldMap(){
     svg+=`<text x="${x}" y="${y+22}" text-anchor="middle" font-size="9"
       font-family="Jua,sans-serif" fill="${labelColor}" opacity="${labelOp*.8}">${r.desc}</text>`;
 
+    // done 상태면 다시하기 라벨 + 클릭
+    if(state==='done'){
+      svg+=`<text x="${x}" y="${y+33}" text-anchor="middle" font-size="8"
+        font-family="Jua,sans-serif" fill="#4ade80" opacity=".8">↩ 다시하기</text>`;
+      svg+=`<rect x="${x-22}" y="${ly}" width="44" height="${y+35-ly}" fill="transparent" style="cursor:pointer" onclick="window.location.href=DAY_FILES[${i}]"/>`;
+    }
+
   });
 
   svg+=`</svg>`;
@@ -699,6 +706,14 @@ function renderWorldMap(){
 }
 
 // ── 이름
+// 이전 날짜 파일 링크
+const DAY_FILES = [
+  'day1-pigbook.html',
+  'day2-village.html',
+  'day3-pantie.html',
+  'day4-dragon.html',
+  'day5-vendingmachine.html',
+];
 function onNameInput(v){
   const t=v.trim();
   document.getElementById('pid-name-preview').textContent=t||'?';

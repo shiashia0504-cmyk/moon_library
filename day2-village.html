@@ -647,6 +647,10 @@ function renderWorldMap(){
     // 라벨 위치 — 핀 위
     const lx=x-lw/2, ly=y-lh-26;
 
+    // done 상태면 클릭 가능하게 감싸기
+    const isClickable = state === 'done';
+    if(isClickable) svg+=`<g style="cursor:pointer" onclick="window.location.href='${DAY_FILES[i]}'" title="${r.name.replace('\n',' ')} 다시 하기">`;
+
     // 오늘 맥동 링
     if(state==='today'){
       svg+=`<circle cx="${x}" cy="${y}" r="18" fill="none" stroke="#f7e96a55" stroke-width="2"
@@ -682,7 +686,14 @@ function renderWorldMap(){
     // 일차 라벨 (핀 아래)
     svg+=`<text x="${x}" y="${y+22}" text-anchor="middle" font-size="9"
       font-family="Jua,sans-serif" fill="${labelColor}" opacity="${labelOp*.8}">${r.desc}</text>`;
-  });
+
+    // done이면 "다시하기" 미니 라벨
+    if(isClickable){
+      svg+=`<text x="${x}" y="${y+33}" text-anchor="middle" font-size="8"
+        font-family="Jua,sans-serif" fill="#4ade80" opacity=".8">↩ 다시하기</text>`;
+      svg+=`</g>`; // clickable group 닫기
+    }
+  }); // REGIONS.forEach 끝
 
   svg+=`</svg>`;
   el.innerHTML=svg;
@@ -696,7 +707,14 @@ function renderWorldMap(){
   }
 }
 
-// ── 이름
+// 이전 날짜 파일 링크
+const DAY_FILES = [
+  'day1-pigbook.html',
+  'day2-village.html',
+  'day3-pantie.html',
+  'day4-dragon.html',
+  'day5-vendingmachine.html',
+];
 function onNameInput(v){
   const t=v.trim();
   document.getElementById('pid-name-preview').textContent=t||'?';

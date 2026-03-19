@@ -320,6 +320,20 @@ body{
       <div class="pid-num">SOYO-2025</div>
     </div>
 
+    <!-- 🔓 잠입 브리핑 -->
+    <div style="background:linear-gradient(135deg,#0a1a10,#0a2a10);border:2px solid #44aa66;border-radius:12px;padding:16px;margin-bottom:14px;position:relative;overflow:hidden">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <div style="background:#44aa66;color:#fff;font-family:'Jua',sans-serif;font-size:11px;padding:3px 10px;border-radius:4px;letter-spacing:2px;animation:blink 1s ease-in-out infinite">🔓 잠입 미션</div>
+        <div style="font-size:11px;color:#88cc99;letter-spacing:1px">DAY 4 — 비밀 거래 현장</div>
+      </div>
+      <div style="font-family:'Jua',sans-serif;font-size:17px;color:#fff;margin-bottom:10px;line-height:1.5">비밀번호를 해독해서<br>현장에 잠입하라!</div>
+      <div style="font-size:13px;color:#88cc99;line-height:1.8">
+        수지 몰래 벌어진 <strong style="color:#fff">비밀 거래 현장</strong>!<br>
+        단서 5개를 모아 <strong style="color:#fff">비밀번호</strong>를 해독하면<br>
+        🔓 잠금이 풀려요!
+      </div>
+    </div>
+
     <!-- 취재 지도 -->
     <div style="background:
         repeating-linear-gradient(0deg,transparent,transparent 22px,rgba(0,0,0,.05) 22px,rgba(0,0,0,.05) 23px),
@@ -342,7 +356,9 @@ body{
       <span style="background:#4ade8022;border:1px solid #4ade8044;border-radius:8px;padding:4px 10px;font-size:12px;color:var(--green)">🔐 비밀 단어</span>
     </div>
 
-    <button class="start-btn" onclick="startGame()">📸 취재 출발!</button>
+    <button class="start-btn" onclick="startGame()" style="background:linear-gradient(135deg,#0a2a10,#44aa66);box-shadow:0 4px 20px #44aa6644">
+      🕵️ 잠입 시작!
+    </button>
   </div>
 </div>
 
@@ -353,16 +369,16 @@ body{
   <div class="up-code" id="unlock-char"></div>
 </div>
 
-<!-- 퀴즈 — 마을 탐문 -->
+<!-- 퀴즈 — 비밀번호 잠입 -->
 <div id="layer-quiz" class="layer hidden">
   <div class="hud">
-    <div class="hud-org">🔓 비밀 거래 현장 — 몰래 잠입하라!</div>
+    <div class="hud-org">🔓 비밀 거래 현장 — 잠입 중...</div>
     <div class="hud-lives" id="hud-lives"></div>
   </div>
   <div class="score-bar">
     <div class="score-box">⭐ <span id="score-disp">0</span>점</div>
     <div class="combo-box" id="combo-disp">🔥 콤보 0</div>
-    <div style="margin-left:auto;font-size:12px;color:var(--ink)" id="stage-counter">0/5 잠입</div>
+    <div style="margin-left:auto;font-size:12px;color:var(--ink)" id="stage-counter">1/5</div>
   </div>
   <!-- 비밀 코드 조각 바 -->
   <div class="code-strip">
@@ -372,33 +388,20 @@ body{
     </div>
   </div>
 
-  <!-- 마을 광장 — SVG 캐릭터 선택 화면 -->
-  <div id="village-screen" style="width:100%;max-width:640px">
-    <div class="card" style="margin-bottom:12px">
-      <div style="font-family:'Jua',sans-serif;font-size:16px;color:var(--moon);margin-bottom:6px;text-align:center">🔓 비밀 거래 현장 잠입</div>
-      <div style="font-size:13px;color:var(--ink);text-align:center;margin-bottom:14px;line-height:1.6">수지 몰래 벌어진 비밀 거래 현장을 조사해요!<br>5곳을 다 잠입해야 해요.</div>
-      <!-- SVG 마을 주민들 -->
-      <div id="location-btns" style="display:flex;justify-content:space-around;align-items:flex-end;padding:10px 0 16px;gap:4px"></div>
-      <!-- 진행 표시 -->
-      <div style="text-align:center;font-size:13px;color:var(--ink)">
-        잠입 완료: <span id="talked-count" style="color:var(--moon);font-family:'Jua',sans-serif">0</span> / 5명
-      </div>
+  <!-- 비밀번호 잠금 패널 -->
+  <div style="width:100%;max-width:640px;margin-bottom:14px">
+    <div style="background:linear-gradient(135deg,#0a1010,#0a2010);border:2px solid #44aa66;border-radius:16px;padding:18px;text-align:center;box-shadow:0 0 24px #00ff6611">
+      <div style="font-size:11px;color:#44aa66;letter-spacing:3px;margin-bottom:10px">🔒 보안 잠금 장치</div>
+      <!-- 비밀번호 슬롯 -->
+      <div id="password-slots" style="display:flex;justify-content:center;gap:8px;margin-bottom:12px"></div>
+      <div id="lock-status" style="font-family:'Jua',sans-serif;font-size:13px;color:#44aa66">단서를 모아 비밀번호를 해독하세요!</div>
     </div>
   </div>
 
-  <!-- 대화창 + 퀴즈 카드 (캐릭터 선택 후 표시) -->
-  <div id="quiz-card-wrap" style="width:100%;max-width:640px;display:none">
-    <!-- 말풍선 -->
-    <div id="speech-bubble" style="background:#fff;color:#222;border-radius:14px;padding:14px 16px;margin-bottom:6px;position:relative;font-size:14px;line-height:1.7;box-shadow:0 4px 16px #00000044">
-      <div id="speech-name" style="font-family:'Jua',sans-serif;font-size:13px;color:#888;margin-bottom:4px"></div>
-      <div id="speech-text"></div>
-      <div style="position:absolute;bottom:-10px;left:28px;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:10px solid #fff"></div>
-    </div>
-    <!-- 캐릭터 미니 아이콘 -->
-    <div id="active-char" style="margin-bottom:10px;padding-left:14px"></div>
-
+  <!-- 퀴즈 카드 -->
+  <div style="width:100%;max-width:640px">
     <div class="card" id="quiz-card">
-      <div class="mtag"><span id="m-icon">🔍</span>&nbsp;<span id="m-label">비밀 잠입</span></div>
+      <div class="mtag"><span id="m-icon">🕵️</span>&nbsp;<span id="m-label">잠입 미션</span></div>
       <div class="q-text" id="q-text"></div>
       <div class="q-hint" id="q-hint"></div>
       <div class="choices" id="choices"></div>
@@ -409,7 +412,7 @@ body{
           <div class="fb-d" id="fb-d"></div>
         </div>
       </div>
-      <button class="next-btn" id="next-btn" onclick="backToVillage()">← 현장으로 돌아가기</button>
+      <button class="next-btn" id="next-btn" onclick="nextStage()">다음 단서 찾기 →</button>
     </div>
   </div>
 </div>
@@ -418,12 +421,12 @@ body{
 <div id="layer-complete" class="layer hidden">
   <div class="page-title">
     <div class="badge">🌙 소요도서관 어린이 기자단</div>
-    <h1>잠입 미션 완료!</h1>
+    <h1>🔓 잠입 미션 완료!</h1>
   </div>
   <div class="card">
     <div style="font-size:68px;text-align:center;margin-bottom:9px;animation:float 2.5s ease-in-out infinite">🔓</div>
     <div style="font-family:'Jua',sans-serif;font-size:19px;color:var(--moon);text-align:center;margin-bottom:4px" id="complete-name"></div>
-    <p style="text-align:center;color:var(--ink);font-size:13px;margin-bottom:16px;line-height:1.7">비밀 거래 현장 5곳을<br>모두 잠입 조사했어요!</p>
+    <p style="text-align:center;color:var(--ink);font-size:13px;margin-bottom:16px;line-height:1.7">비밀번호를 완전히 해독하고<br>비밀 거래 현장에 잠입했어요!</p>
     <div style="background:var(--card2);border:1px solid var(--border);border-radius:13px;padding:18px;text-align:center;margin-bottom:12px">
       <div style="font-size:12px;color:var(--ink);margin-bottom:4px">🌙 탐문 점수</div>
       <div class="final-score" id="final-score-val">0</div>
@@ -438,10 +441,10 @@ body{
     <div style="background:linear-gradient(135deg,#0a0a1a,#1a1a2e);border:2px solid #4444aa;border-radius:12px;padding:14px;margin-bottom:14px;text-align:center">
       <div style="font-size:11px;color:#8888cc;letter-spacing:2px;margin-bottom:6px">📺 내일의 취재 예고</div>
       <div style="font-family:'Jua',sans-serif;font-size:15px;color:#aaaaff;line-height:1.6">
-        비밀 자판기의 버튼을 눌러야 한다?!<br>
+        비밀 자판기의 버튼을 모두 눌러야 한다?!<br>
         <span style="color:#ffffff">내일은 엄마 자판기로 방탈출 최후 관문!</span>
       </div>
-      <div style="font-size:20px;margin-top:8px">🚪</div>
+      <div style="font-size:20px;margin-top:8px">🎰</div>
     </div>
     <div id="email-status"></div>
     <button class="retry-btn" onclick="retryGame()">🔄 다시 잠입하기</button>
@@ -498,61 +501,49 @@ function getTodayChars(){
 }
 
 // ══ 마을 주민 데이터 ══
-const LOCATIONS = [
-  {
-    id:0, name:'수지네 현관', icon:'📦',
-    explore:'택배 상자를 발견했어요! 안에서 이상한 소리가 나고 있어요! 🐉',
-    question:'수지네 가족이 택배로 받은 것은 무엇인가요?',
-    hint:'💡 온라인 쇼핑으로 산 반려동물이에요!',
-    choices:['반려 강아지','반려 고양이','반려 용','반려 토끼'],answer:2,
-    ok:'🐉 정답! 반려 용이에요!',ok_desc:'첫 번째 단서 확보!',
-    ng:'정답은 반려 용이에요.',ng_desc:'온라인으로 산 특별한 반려동물이에요.',
-  },
-  {
-    id:1, name:'수지 방', icon:'🩷',
-    explore:'수지 방에 들어갔어요! 용구의 흔적이 가득해요! 🐉',
-    question:'용구는 처음 왔을 때 어느 정도 크기였나요?',
-    hint:'💡 처음엔 작았다가 점점 자랐어요!',
-    choices:['강아지만큼','작은 냉장고만큼','자동차만큼','수지 방만큼'],answer:1,
-    ok:'🩷 정답! 처음엔 작은 냉장고만 했어요!',ok_desc:'두 번째 단서 확보!',
-    ng:'정답은 작은 냉장고만큼이에요.',ng_desc:'처음에 택배 상자에서 나왔을 때 크기를 생각해봐요.',
-  },
-  {
-    id:2, name:'거실 소파', icon:'🛋️',
-    explore:'소파 뒤에서 단서를 발견했어요! 용구가 팔린 이유가 여기 있어요! 🔍',
-    question:'엄마 아빠가 용구를 팔기로 한 이유는?',
-    hint:'💡 용구가 너무 많이 했던 것들이에요!',
-    choices:['울음소리가 시끄러워서','너무 크게 자라고 똥을 많이 싸서','날개가 생겨서','불을 뿜어서'],answer:1,
-    ok:'🛋️ 정답! 너무 크고 똥을 너무 많이 쌌어요!',ok_desc:'세 번째 단서 확보!',
-    ng:'정답은 너무 크게 자라고 똥을 많이 싸서예요.',ng_desc:'용구 때문에 집이 어떻게 됐는지 떠올려봐요.',
-  },
-  {
-    id:3, name:'중고마켓 현장', icon:'🏷️',
-    explore:'비밀 거래 현장을 발견했어요! 용구가 팔리는 순간이에요! 🔓',
-    question:'엄마 아빠는 용구를 어디에 팔았나요?',
-    hint:'💡 수지 몰래 팔았어요!',
-    choices:['동물원에','중고 마켓에','학교에','친척 집에'],answer:1,
-    ok:'🏷️ 정답! 중고 마켓에 몰래 팔았어요!',ok_desc:'네 번째 단서 확보! 잠입 성공!',
-    ng:'정답은 중고 마켓이에요.',ng_desc:'수지 몰래 어디에 팔았는지 생각해봐요.',
-  },
-  {
-    id:4, name:'강가', icon:'🌊',
-    explore:'강가에서 마지막 흔적을 발견했어요! 용구의 결말이에요! 🐉',
-    question:'팔리고 또 팔리던 용구는 결국 어떻게 됐나요?',
-    hint:'💡 마지막 주인이 강에 버렸어요. 그리고 용구는?',
-    choices:['수지한테 돌아왔다','바다로 헤엄쳐 갔다','외계로 떠났다','산속에 숨었다'],answer:2,
-    ok:'🌌 정답! 용구는 결국 외계로 떠났어요!',ok_desc:'마지막 단서 확보! 잠입 미션 완료!',
-    ng:'정답은 외계로 떠났다예요.',ng_desc:'용구의 마지막 여정을 떠올려봐요.',
-  },
+// ══ 비밀번호: 용구야 ══
+const PASSWORD = ['용','구','야','🐉','!'];
+const PASSWORD_DISPLAY = ['용','구','야','🐉','!'];
+
+const STAGES = [
+  {icon:'📦',label:'단서 #1 — 용구 파악',mission:'수상한 택배를 조사하라!',
+   question:'수지네 가족이 온라인으로 주문한 것은?',
+   hint:'💡 반려동물인데 아주 특별해요!',
+   choices:['반려 강아지','반려 고양이','반려 용','반려 토끼'],answer:2,
+   ok:'📦 정답! 반려 용이에요!',ok_desc:'비밀번호 첫 글자 해독!',
+   ng:'정답은 반려 용이에요.',ng_desc:'아주 특별한 반려동물이에요.'},
+  {icon:'🩷',label:'단서 #2 — 용구 크기',mission:'용구의 성장을 추적하라!',
+   question:'용구가 처음 왔을 때 크기는?',
+   hint:'💡 처음엔 작았다가 점점 자랐어요!',
+   choices:['강아지만큼','작은 냉장고만큼','자동차만큼','수지 방만큼'],answer:1,
+   ok:'🩷 정답! 처음엔 작은 냉장고만 했어요!',ok_desc:'비밀번호 두 번째 글자 해독!',
+   ng:'정답은 작은 냉장고만큼이에요.',ng_desc:'택배 상자에서 처음 나왔을 때 크기예요.'},
+  {icon:'💩',label:'단서 #3 — 사건 원인',mission:'용구가 팔린 이유를 밝혀라!',
+   question:'엄마 아빠가 용구를 팔기로 한 이유는?',
+   hint:'💡 용구가 너무 많이 한 것들이에요!',
+   choices:['울음소리가 시끄러워서','너무 크게 자라고 똥을 많이 싸서','날개가 생겨서','불을 뿜어서'],answer:1,
+   ok:'💩 정답! 너무 크고 똥을 너무 많이 쌌어요!',ok_desc:'비밀번호 세 번째 글자 해독!',
+   ng:'정답은 너무 크게 자라고 똥을 많이 싸서예요.',ng_desc:'용구 때문에 집이 어떻게 됐는지 떠올려봐요.'},
+  {icon:'🏷️',label:'단서 #4 — 거래 현장',mission:'비밀 거래를 포착하라!',
+   question:'엄마 아빠는 용구를 수지 몰래 어디에 팔았나요?',
+   hint:'💡 인터넷으로 물건을 사고파는 곳이에요!',
+   choices:['동물원에','중고 마켓에','학교에','친척 집에'],answer:1,
+   ok:'🏷️ 정답! 중고 마켓에 몰래 팔았어요!',ok_desc:'비밀번호 네 번째 글자 해독!',
+   ng:'정답은 중고 마켓이에요.',ng_desc:'수지 몰래 어디에 팔았는지 생각해봐요.'},
+  {icon:'🌌',label:'단서 #5 — 용구의 결말',mission:'용구의 마지막을 밝혀라!',
+   question:'팔리고 또 팔리던 용구는 결국 어떻게 됐나요?',
+   hint:'💡 마지막 주인이 강에 버렸어요. 그리고 용구는?',
+   choices:['수지한테 돌아왔다','바다로 헤엄쳐 갔다','외계로 떠났다','산속에 숨었다'],answer:2,
+   ok:'🌌 정답! 용구는 결국 외계로 떠났어요!',ok_desc:'비밀번호 완전 해독! 🔓',
+   ng:'정답은 외계로 떠났다예요.',ng_desc:'용구의 마지막 여정을 떠올려봐요.'},
 ];
 
 // ══ 상태 ══
-let reporterName='',score=0,combo=0,lives=3;
+let reporterName='',currentStage=0,score=0,combo=0,lives=3;
 let answered=false,usedRetry=false;
 let unlockedCodes=[];
 let todayDay=4; // 4일차 고정
-let exploredPlaces=new Set();
-let currentLocation=null;
+let unlockedPassword=[]; // 해독된 비밀번호 글자들
 const MAX_LIVES=3,BASE=100,BONUS=50,COMBO_B=30;
 const NUMS=['①','②','③','④'];
 function showLayer(id){
@@ -647,6 +638,7 @@ function renderWorldMap(){
     // 라벨 위치 — 핀 위
     const lx=x-lw/2, ly=y-lh-26;
 
+
     // 오늘 맥동 링
     if(state==='today'){
       svg+=`<circle cx="${x}" cy="${y}" r="18" fill="none" stroke="#f7e96a55" stroke-width="2"
@@ -682,6 +674,14 @@ function renderWorldMap(){
     // 일차 라벨 (핀 아래)
     svg+=`<text x="${x}" y="${y+22}" text-anchor="middle" font-size="9"
       font-family="Jua,sans-serif" fill="${labelColor}" opacity="${labelOp*.8}">${r.desc}</text>`;
+
+    // done 상태면 다시하기 라벨 + 클릭
+    if(state==='done'){
+      svg+=`<text x="${x}" y="${y+33}" text-anchor="middle" font-size="8"
+        font-family="Jua,sans-serif" fill="#4ade80" opacity=".8">↩ 다시하기</text>`;
+      svg+=`<rect x="${x-22}" y="${ly}" width="44" height="${y+35-ly}" fill="transparent" style="cursor:pointer" onclick="window.location.href=DAY_FILES[${i}]"/>`;
+    }
+
   });
 
   svg+=`</svg>`;
@@ -697,6 +697,14 @@ function renderWorldMap(){
 }
 
 // ── 이름
+// 이전 날짜 파일 링크
+const DAY_FILES = [
+  'day1-pigbook.html',
+  'day2-village.html',
+  'day3-pantie.html',
+  'day4-dragon.html',
+  'day5-vendingmachine.html',
+];
 function onNameInput(v){
   const t=v.trim();
   document.getElementById('pid-name-preview').textContent=t||'?';
@@ -720,104 +728,103 @@ function goToName(){
 
 // ── 게임 시작
 function startGame(){
-  score=0;combo=0;lives=MAX_LIVES;
-  unlockedCodes=[];exploredPlaces=new Set();currentLocation=null;
+  currentStage=0;score=0;combo=0;lives=MAX_LIVES;
+  unlockedCodes=[];unlockedPassword=[];
   showLayer('layer-quiz');
   renderCodeSlots();
+  renderPasswordSlots();
   renderHUD();
-  renderMap();
+  renderStage();
 }
 function retryGame(){
   document.getElementById('gameover-overlay').classList.remove('show');
   startGame();
 }
 
-// ── 비밀 지도 렌더
-function renderMap(){
-  document.getElementById('village-screen').style.display='block';
-  document.getElementById('quiz-card-wrap').style.display='none';
-  document.getElementById('stage-counter').textContent=`${exploredPlaces.size}/5 탐색`;
-  document.getElementById('talked-count').textContent=exploredPlaces.size;
-
-  const wrap=document.getElementById('location-btns');
-  wrap.innerHTML='';
-
-  // 2x3 그리드 레이아웃으로 장소 버튼 배치
-  wrap.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:4px';
-
-  LOCATIONS.forEach(loc=>{
-    const done=exploredPlaces.has(loc.id);
-    const btn=document.createElement('button');
-    btn.style.cssText=`
-      background:${done?'linear-gradient(135deg,#1a3a0a,#2a5010)':'linear-gradient(135deg,#0a1828,#1a2a3a)'};
-      border:2px solid ${done?'var(--green)':'#ffffff22'};
-      border-radius:14px;padding:12px 8px;
-      color:#fff;cursor:${done?'default':'pointer'};
-      display:flex;flex-direction:column;align-items:center;gap:6px;
-      transition:all .2s;
-      ${!done?'box-shadow:0 0 12px #4d9fff22':''}
+// ── 비밀번호 슬롯 초기화
+function renderPasswordSlots(){
+  const el=document.getElementById('password-slots');
+  if(!el)return;
+  el.innerHTML='';
+  PASSWORD_DISPLAY.forEach((_,i)=>{
+    const slot=document.createElement('div');
+    slot.id=`pw-slot-${i}`;
+    slot.style.cssText=`
+      width:52px;height:58px;border-radius:10px;
+      border:2px solid #44aa6633;
+      background:#0a1a10;
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Jua',sans-serif;font-size:22px;
+      color:transparent;transition:all .4s;
     `;
-    btn.innerHTML=`
-      <div style="font-size:28px;position:relative">
-        ${loc.icon}
-        ${done?'<div style="position:absolute;top:-4px;right:-8px;background:var(--green);border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:11px">✓</div>':'<div style="position:absolute;top:-4px;right:-8px;background:var(--moon);border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:11px;animation:blink 1.2s ease-in-out infinite">!</div>'}
-      </div>
-      <div style="font-family:'Jua',sans-serif;font-size:12px;text-align:center;line-height:1.3;color:${done?'var(--green)':'var(--star)'}">${loc.name}</div>
-      <div style="font-size:10px;color:${done?'var(--green)':'var(--ink)'}">${done?'잠입완료':'잠입하기'}</div>
-    `;
-    if(!done) btn.onclick=()=>exploreLocation(loc);
-    else btn.onmouseover=()=>{};
-    wrap.appendChild(btn);
+    slot.textContent='?';
+    el.appendChild(slot);
   });
 }
 
-// ── 비밀 잠입
-function exploreLocation(loc){
-  currentLocation=loc;
+// ── 비밀번호 한 글자 공개
+function unlockPasswordChar(idx){
+  const ch=PASSWORD_DISPLAY[idx];
+  const slot=document.getElementById(`pw-slot-${idx}`);
+  if(!slot)return;
+  slot.textContent=ch;
+  slot.style.color='#44ff88';
+  slot.style.border='2px solid #44aa66';
+  slot.style.background='linear-gradient(135deg,#0a2a10,#1a4a20)';
+  slot.style.boxShadow='0 0 14px #44ff8844';
+  slot.style.animation='slotReveal .5s ease both';
+  unlockedPassword.push(ch);
+
+  // 잠금 상태 업데이트
+  const status=document.getElementById('lock-status');
+  if(status){
+    if(unlockedPassword.length>=PASSWORD_DISPLAY.length){
+      status.textContent='🔓 비밀번호 해독 완료!';
+      status.style.color='#44ff88';
+      // 문 열리는 효과
+      const panel=status.closest('div');
+      if(panel){
+        panel.style.border='2px solid #44ff88';
+        panel.style.boxShadow='0 0 40px #44ff8844';
+      }
+    } else {
+      status.textContent=`🔒 해독 중... ${unlockedPassword.length}/5 글자`;
+    }
+  }
+}
+
+// ── 스테이지
+function renderStage(){
   answered=false;usedRetry=false;
-
-  document.getElementById('village-screen').style.display='none';
-  document.getElementById('quiz-card-wrap').style.display='block';
-
-  // 탐색 결과 말풍선
-  document.getElementById('speech-name').textContent=`${loc.icon} ${loc.name} 탐색 결과`;
-  document.getElementById('speech-text').textContent=loc.explore;
-
-  // 활성 장소 표시
-  document.getElementById('active-char').innerHTML=
-    `<span style="font-size:32px">${loc.icon}</span>
-     <span style="font-family:'Jua',sans-serif;font-size:13px;color:var(--ink);margin-left:8px">${loc.name}</span>`;
-
-  document.getElementById('m-icon').textContent='🔍';
-  document.getElementById('m-label').textContent='비밀 잠입';
-  document.getElementById('q-text').textContent=loc.question;
-  document.getElementById('q-hint').textContent=loc.hint;
-
+  const s=STAGES[currentStage];
+  document.getElementById('stage-counter').textContent=`${currentStage+1}/5`;
+  document.getElementById('m-icon').textContent=s.icon;
+  document.getElementById('m-label').textContent=s.label;
+  document.getElementById('q-text').textContent=s.question;
+  document.getElementById('q-hint').textContent=s.hint;
   const ce=document.getElementById('choices');ce.innerHTML='';
-  loc.choices.forEach((c,i)=>{
+  s.choices.forEach((c,i)=>{
     const btn=document.createElement('button');btn.className='cbtn';
     btn.innerHTML=`<span class="num">${NUMS[i]}</span>${c}`;
-    btn.onclick=()=>checkLocationAnswer(i,btn);
+    btn.onclick=()=>checkAnswer(i,btn);
     ce.appendChild(btn);
   });
   document.getElementById('feedback').className='feedback';
   document.getElementById('next-btn').className='next-btn';
-
   const card=document.getElementById('quiz-card');
   card.style.animation='none';
   requestAnimationFrame(()=>{card.style.animation='cardIn .4s ease both';});
-  window.scrollTo(0,0);
 }
 
-// ── 장소 정답 체크
-function checkLocationAnswer(idx,btn){
+// ── 정답 체크
+function checkAnswer(idx,btn){
   if(answered)return;
-  const loc=currentLocation;
+  const s=STAGES[currentStage];
   const allBtns=document.querySelectorAll('.cbtn');
   const fb=document.getElementById('feedback');
   const next=document.getElementById('next-btn');
 
-  if(idx===loc.answer){
+  if(idx===s.answer){
     answered=true;
     allBtns.forEach(b=>b.disabled=true);
     btn.classList.add('correct');
@@ -826,16 +833,19 @@ function checkLocationAnswer(idx,btn){
     combo++;
     if(combo>=2)gained+=COMBO_B*(combo-1);
     score+=gained;renderHUD();
-    exploredPlaces.add(loc.id);
-    setTimeout(()=>unlockCode(exploredPlaces.size-1),400);
     fb.className='feedback ok show';
-    document.getElementById('fb-icon').textContent='🎉';
-    document.getElementById('fb-t').textContent=loc.ok+(combo>=2?` 🔥 ${combo}콤보!`:'');
-    document.getElementById('fb-d').textContent=loc.ok_desc+(gained>BASE?` (+${gained-BASE}점 보너스!)`:'');
+    document.getElementById('fb-icon').textContent='🔓';
+    document.getElementById('fb-t').textContent=s.ok+(combo>=2?` 🔥 ${combo}콤보!`:'');
+    document.getElementById('fb-d').textContent=s.ok_desc+(gained>BASE?` (+${gained-BASE}점 보너스!)`:'');
     launchConfetti();
     if(combo>=2)showComboPopup(combo);
-    const isLast=exploredPlaces.size>=LOCATIONS.length;
-    next.textContent=isLast?'🔓 잠입 완료!':'← 현장으로 돌아가기';
+    // 비밀번호 글자 공개!
+    setTimeout(()=>{
+      unlockCode(currentStage);
+      unlockPasswordChar(currentStage);
+    },400);
+    const isLast=currentStage===STAGES.length-1;
+    next.textContent=isLast?'🔓 잠입 완료!':'다음 단서 찾기 →';
     next.className='next-btn show';
   } else {
     btn.classList.add('wrong');btn.disabled=true;
@@ -849,31 +859,30 @@ function checkLocationAnswer(idx,btn){
       }
       fb.className='feedback retry show';
       document.getElementById('fb-icon').textContent='🤔';
-      document.getElementById('fb-t').textContent='아쉬워요! 한 번 더 기회가 있어요!';
+      document.getElementById('fb-t').textContent='경비에게 들킬 뻔 했어요! 한 번 더!';
       document.getElementById('fb-d').textContent=`목숨 -1 (남은 목숨: ${lives}개)`;
     } else {
       answered=true;combo=0;
       allBtns.forEach(b=>b.disabled=true);
-      allBtns[loc.answer].classList.add('correct');
+      allBtns[s.answer].classList.add('correct');
       renderHUD();
       fb.className='feedback ng show';
       document.getElementById('fb-icon').textContent='😢';
-      document.getElementById('fb-t').textContent=loc.ng;
-      document.getElementById('fb-d').textContent=loc.ng_desc;
-      const isLast=exploredPlaces.size>=LOCATIONS.length;
-      next.textContent=isLast?'🔓 잠입 완료!':'← 현장으로 돌아가기';
+      document.getElementById('fb-t').textContent=s.ng;
+      document.getElementById('fb-d').textContent=s.ng_desc;
+      const isLast=currentStage===STAGES.length-1;
+      next.textContent=isLast?'🔓 잠입 완료!':'다음 단서 찾기 →';
       next.className='next-btn show';
     }
   }
 }
 
-function backToVillage(){
-  if(exploredPlaces.size>=LOCATIONS.length){ showComplete(); }
-  else { renderMap(); window.scrollTo(0,0); }
+function nextStage(){
+  currentStage++;
+  if(currentStage>=STAGES.length)showComplete();
+  else renderStage();
 }
-function nextStage(){ backToVillage(); }
 
-// ── 마을 광장 SVG 캐릭터 렌더
 // ── 글자 슬롯 초기화 (게임 시작 시)
 function renderCodeSlots(){
   const el = document.getElementById('code-slots');
@@ -930,15 +939,14 @@ function renderHUD(){
 }
 
 // ── 지도
-// ── 완료
 function showComplete(){
   showLayer('layer-complete');
   document.getElementById('complete-name').textContent=reporterName+' 기자님, 수고하셨어요!';
   document.getElementById('final-score-val').textContent=score+'점';
-  document.getElementById('final-sub').textContent=`남은 목숨 ${'❤️'.repeat(lives)} · 5곳 잠입 완료`;
+  document.getElementById('final-sub').textContent=`남은 목숨 ${'❤️'.repeat(lives)} · 비밀번호 해독 완료`;
   let rank='';
-  if(lives===MAX_LIVES&&score>=(BASE+BONUS)*LOCATIONS.length)rank='🌟 달빛 특종 기자상!';
-  else if(lives>0&&score>=BASE*LOCATIONS.length)rank='📸 우수 취재상!';
+  if(lives===MAX_LIVES&&score>=(BASE+BONUS)*STAGES.length)rank='🌟 달빛 특종 기자상!';
+  else if(lives>0&&score>=BASE*STAGES.length)rank='📸 우수 취재상!';
   else rank='📋 견습 기자상';
   document.getElementById('rank-badge').textContent=rank;
   renderTodayWord();
