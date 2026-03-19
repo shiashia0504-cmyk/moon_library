@@ -19,21 +19,30 @@
   --font-body:'Nanum Gothic','맑은 고딕','Apple SD Gothic Neo',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;-webkit-text-size-adjust:100%}
-body{font-family:var(--font-body);background:var(--night);color:var(--star);position:relative}
-#bg{position:fixed;inset:0;z-index:0}
-.layer{
-  position:fixed;top:0;left:0;right:0;bottom:0;
-  z-index:10;
-  display:-webkit-box;display:-ms-flexbox;display:flex;
-  -webkit-box-orient:vertical;-webkit-box-direction:normal;
-  -ms-flex-direction:column;flex-direction:column;
-  -webkit-box-align:center;-ms-flex-align:center;align-items:center;
-  overflow-y:auto;overflow-x:hidden;
-  -webkit-overflow-scrolling:touch;
-  overscroll-behavior:contain;
-  padding:14px 13px 100px;
+html{height:100%}
+body{
+  font-family:var(--font-body);
+  background:var(--night);
+  color:var(--star);
+  min-height:100%;
+  position:relative;
+  overflow-x:hidden;
 }
+#bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
+
+/* ── 레이어: 스크롤 가능한 풀페이지 ── */
+.layer{
+  position:relative;
+  z-index:10;
+  min-height:100vh;
+  width:100%;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  padding:14px 13px 100px;
+  overflow-x:hidden;
+}
+.layer.active{display:flex}
 .layer.hidden{display:none!important}
 
 /* HUD */
@@ -129,9 +138,12 @@ body{font-family:var(--font-body);background:var(--night);color:var(--star);posi
 .briefing{background:#fef9ec;color:#2a2000;border-radius:10px;padding:15px 17px;font-size:13px;line-height:1.9;margin-bottom:18px;position:relative;box-shadow:2px 4px 12px #00000044;border-top:4px solid var(--moon)}
 .briefing::after{content:'기밀 문서';position:absolute;top:7px;right:11px;font-size:10px;color:#c0392b88;font-weight:800;letter-spacing:2px;transform:rotate(4deg)}
 
-/* 게임오버 */
-#gameover-overlay{position:fixed;inset:0;z-index:300;background:#00000088;backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+#gameover-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:300;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
 #gameover-overlay.show{opacity:1;pointer-events:all}
+#combo-popup{position:fixed;top:30%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-title);font-size:clamp(26px,8vw,50px);color:var(--orange);text-shadow:0 0 28px #fb923c88;pointer-events:none;z-index:200;opacity:0;transition:opacity .15s}
+#unlock-popup{position:fixed;top:28%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#1a2e00,#2a4500);border:2px solid var(--moon);border-radius:16px;padding:18px 28px;text-align:center;font-family:var(--font-title);box-shadow:0 0 40px var(--glow);z-index:200;opacity:0;pointer-events:none;transition:opacity .2s}
+#unlock-popup.show{opacity:1}
+#confetti{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:500}
 .go-card{background:var(--card2);border:2px solid var(--red);border-radius:22px;padding:32px 24px;text-align:center;box-shadow:0 0 55px #ff5a5a44;animation:cardIn .4s ease;max-width:320px;width:90%}
 .go-emoji{font-size:60px;margin-bottom:10px}
 .go-title{font-family:'Jua',sans-serif;font-size:26px;color:var(--red);margin-bottom:7px;text-shadow:0 0 18px #ff5a5a66}
@@ -140,9 +152,6 @@ body{font-family:var(--font-body);background:var(--night);color:var(--star);posi
 .go-btn:hover{transform:translateY(-2px)}
 .go-btn2{width:100%;padding:12px;background:#ffffff09;border:1px solid var(--border);border-radius:12px;color:var(--ink);font-family:'Jua',sans-serif;font-size:14px;cursor:pointer;transition:background .2s}
 .go-btn2:hover{background:#ffffff16}
-
-/* 콤보팝업 */
-#combo-popup{position:fixed;top:34%;left:50%;transform:translate(-50%,-50%);font-family:'Jua',sans-serif;font-size:clamp(26px,8vw,50px);color:var(--orange);text-shadow:0 0 28px #fb923c88;pointer-events:none;z-index:200;opacity:0;transition:opacity .15s}
 
 /* 완료 */
 .final-score{font-family:'Jua',sans-serif;font-size:54px;color:var(--moon);text-shadow:0 0 22px var(--glow);text-align:center;line-height:1.1}
@@ -230,26 +239,9 @@ body{font-family:var(--font-body);background:var(--night);color:var(--star);posi
 /* 오늘 배지 */
 .today-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#3d2b1a,#5a3e25);border:2px solid #c8a060;border-radius:8px;padding:5px 12px;margin-top:10px;font-family:'Jua',sans-serif;font-size:12px;color:#f0d090;box-shadow:0 2px 8px #00000055;animation:fadeUp .4s ease both;width:100%;justify-content:center;text-shadow:0 1px 2px #00000066}
 
-/* 코드 잠금해제 팝업 */
-#unlock-popup{
-  position:fixed;top:28%;left:50%;transform:translate(-50%,-50%);
-  background:linear-gradient(135deg,#1a2e00,#2a4500);
-  border:2px solid var(--moon);border-radius:16px;
-  padding:18px 28px;text-align:center;
-  font-family:'Jua',sans-serif;
-  box-shadow:0 0 40px var(--glow);
-  z-index:200;opacity:0;pointer-events:none;
-  transition:opacity .2s;
-}
-#unlock-popup.show{opacity:1}
-#unlock-popup .up-emoji{font-size:32px;margin-bottom:4px}
-#unlock-popup .up-title{font-size:16px;color:var(--moon);margin-bottom:2px}
-#unlock-popup .up-code{font-size:28px;color:#fff;letter-spacing:4px;text-shadow:0 0 16px var(--glow)}
-
 @keyframes fadeDown{from{opacity:0;transform:translateY(-13px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-#confetti{position:fixed;inset:0;pointer-events:none;z-index:500}
 @media(max-width:380px){.card{padding:16px 13px}.map-dot{width:36px;height:36px;font-size:14px}.map-label{font-size:9px}}
 </style>
 </head>
@@ -270,7 +262,7 @@ body{font-family:var(--font-body);background:var(--night);color:var(--star);posi
 </div>
 
 <!-- 이름 입력 -->
-<div id="layer-name" class="layer">
+<div id="layer-name" class="layer active">
   <div class="page-title">
     <div class="badge">🌙 소요도서관 어린이 기자단</div>
     <h1>달빛 취재</h1>
@@ -513,11 +505,12 @@ const MAX_LIVES=3, BASE=100, BONUS=50, COMBO_B=30;
 const NUMS=['①','②','③','④'];
 
 function showLayer(id){
-  ['layer-name','layer-intro','layer-quiz','layer-complete']
-    .forEach(l=>document.getElementById(l).classList.toggle('hidden',l!==id));
-  // 화면 전환 시 맨 위로
-  const el=document.getElementById(id);
-  if(el) el.scrollTop=0;
+  ['layer-name','layer-intro','layer-quiz','layer-complete'].forEach(l=>{
+    const el=document.getElementById(l);
+    if(l===id){ el.classList.remove('hidden'); el.classList.add('active'); }
+    else { el.classList.add('hidden'); el.classList.remove('active'); }
+  });
+  window.scrollTo(0,0);
 }
 
 // ══ 취재 지역 데이터 ★ 책 정해지면 이름/아이콘 교체! ══
