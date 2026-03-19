@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>달빛 취재 1일차 🌙 소요도서관</title>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#080c18;--card:#131f35;--card2:#1a2a42;
+  --moon:#f7e96a;--glow:#ffe94466;
+  --star:#e8f0ff;--ink:#94b0d8;--accent:#4d9fff;
+  --green:#4ade80;--red:#ff5a5a;--orange:#fb923c;--purple:#a78bfa;
+  --border:#ffffff14;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Nanum Gothic',sans-serif;background:var(--night);color:var(--star);position:relative}
+#bg{position:fixed;inset:0;z-index:0}
+.layer{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;overflow-y:scroll;overflow-x:hidden;padding:14px 13px 80px;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
+.layer.hidden{display:none!important}
+
+/* HUD */
+.hud{width:100%;max-width:640px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;animation:fadeDown .5s ease both}
+.hud-org{font-family:'Jua',sans-serif;font-size:11px;letter-spacing:2px;color:var(--moon);text-shadow:0 0 10px var(--glow)}
+.hud-lives{display:flex;gap:3px}
+.heart{font-size:19px;transition:transform .2s,filter .2s}
+.heart.lost{filter:grayscale(1) opacity(.3);transform:scale(.82)}
+
+/* 점수바 */
+.score-bar{width:100%;max-width:640px;display:flex;align-items:center;gap:8px;margin-bottom:14px;animation:fadeDown .5s .05s ease both}
+.score-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:6px 13px;font-family:'Jua',sans-serif;font-size:13px;color:var(--moon);white-space:nowrap;box-shadow:0 0 10px #ffe94420}
+.combo-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:6px 13px;font-family:'Jua',sans-serif;font-size:13px;white-space:nowrap;transition:all .2s}
+.combo-box.pop{animation:comboPop .3s ease}
+@keyframes comboPop{0%,100%{transform:scale(1)}50%{transform:scale(1.28)}}
+
+/* 지도 */
+.map-wrap{width:100%;max-width:640px;margin-bottom:16px;animation:fadeDown .5s .1s ease both}
+.map-track{display:flex;align-items:center;justify-content:space-between;position:relative;padding:0 4px}
+.map-track::before{content:'';position:absolute;top:50%;left:8%;right:8%;height:3px;background:repeating-linear-gradient(90deg,var(--border) 0,var(--border) 7px,transparent 7px,transparent 14px);transform:translateY(-50%);z-index:0}
+.map-node{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.map-dot{width:42px;height:42px;border-radius:50%;border:2px solid var(--border);background:var(--card);display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .35s}
+.map-dot.done{background:var(--green);border-color:var(--green);box-shadow:0 0 12px #4ade8055}
+.map-dot.active{background:var(--moon);border-color:var(--moon);box-shadow:0 0 18px var(--glow);animation:nodePulse 1.4s ease-in-out infinite}
+.map-dot.locked{opacity:.3}
+@keyframes nodePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.map-label{font-size:10px;color:var(--ink);font-weight:700;text-align:center;max-width:52px;line-height:1.3}
+.map-label.active-lbl{color:var(--moon)}
+
+/* 카드 */
+.card{width:100%;max-width:640px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:22px 18px;box-shadow:0 12px 48px #00000055,inset 0 1px 0 #ffffff0d;position:relative;overflow:hidden;animation:cardIn .4s ease both}
+.card::after{content:'';position:absolute;top:-70px;right:-70px;width:180px;height:180px;background:radial-gradient(circle,var(--glow) 0%,transparent 70%);pointer-events:none}
+@keyframes cardIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+.mtag{display:inline-flex;align-items:center;gap:6px;background:#ffffff09;border:1px solid var(--border);border-radius:8px;padding:4px 11px;font-size:11px;color:var(--ink);font-weight:800;letter-spacing:1px;margin-bottom:12px}
+.q-text{font-family:'Jua',sans-serif;font-size:clamp(15px,4.2vw,20px);color:#fff;line-height:1.55;margin-bottom:7px}
+.q-hint{font-size:13px;color:var(--ink);line-height:1.5;margin-bottom:16px}
+
+/* 선택지 */
+.choices{display:flex;flex-direction:column;gap:8px}
+.cbtn{background:#ffffff07;border:2px solid var(--border);border-radius:12px;padding:12px 15px;color:var(--star);font-family:'Nanum Gothic',sans-serif;font-size:15px;font-weight:700;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;transition:all .18s;position:relative;overflow:hidden}
+.cbtn:hover:not(:disabled){background:#ffffff11;border-color:var(--accent);transform:translateX(4px);box-shadow:0 0 14px #4d9fff33}
+.cbtn .num{min-width:27px;height:27px;background:#ffffff0f;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--accent);flex-shrink:0}
+.cbtn.correct{background:#4ade8020;border-color:var(--green);box-shadow:0 0 16px #4ade8033;animation:bounce .35s ease}
+.cbtn.wrong{background:#ff5a5a20;border-color:var(--red);animation:shake .3s ease}
+.cbtn:disabled{cursor:default}
+@keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+
+/* 피드백 */
+.feedback{margin-top:14px;padding:12px 15px;border-radius:12px;font-size:14px;font-weight:800;display:none;align-items:flex-start;gap:9px;line-height:1.5}
+.feedback.show{display:flex;animation:fadeUp .25s ease}
+.feedback.ok{background:#4ade8015;border:1px solid #4ade8050;color:var(--green)}
+.feedback.ng{background:#ff5a5a15;border:1px solid #ff5a5a50;color:var(--red)}
+.feedback.retry{background:#fb923c15;border:1px solid #fb923c50;color:var(--orange)}
+.fb-icon{font-size:19px;flex-shrink:0}
+.fb-t{font-family:'Jua',sans-serif;font-size:14px;margin-bottom:2px}
+.fb-d{font-size:12px;font-weight:400;opacity:.9}
+
+/* 버튼들 */
+.next-btn{margin-top:14px;width:100%;padding:14px;background:linear-gradient(135deg,#183660,var(--accent));border:none;border-radius:12px;color:#fff;font-family:'Jua',sans-serif;font-size:16px;cursor:pointer;display:none;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px #4d9fff44;transition:transform .2s,box-shadow .2s}
+.next-btn.show{display:flex;animation:fadeUp .3s .05s ease both}
+.next-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px #4d9fff55}
+.start-btn{width:100%;padding:15px;background:linear-gradient(135deg,#163a12,var(--green));border:none;border-radius:13px;color:#fff;font-family:'Jua',sans-serif;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 4px 20px #4ade8044;transition:transform .2s;margin-top:4px}
+.start-btn:hover{transform:translateY(-2px)}
+.start-btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
+.retry-btn{width:100%;padding:14px;background:linear-gradient(135deg,#28083a,var(--purple));border:none;border-radius:13px;color:#fff;font-family:'Jua',sans-serif;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px #a78bfa44;transition:transform .2s;margin-top:10px}
+.retry-btn:hover{transform:translateY(-2px)}
+
+/* 이름 입력 / 기자증 */
+.name-input{width:100%;padding:14px 17px;background:#ffffff0b;border:2px solid var(--border);border-radius:12px;color:#fff;font-family:'Jua',sans-serif;font-size:19px;text-align:center;outline:none;transition:border-color .2s,box-shadow .2s;caret-color:var(--moon);margin-bottom:13px}
+.name-input::placeholder{color:#ffffff30;font-size:14px}
+.name-input:focus{border-color:var(--moon);box-shadow:0 0 14px var(--glow)}
+.press-id{background:linear-gradient(135deg,#162035,#0d1828);border:2px solid var(--moon);border-radius:14px;padding:15px 17px;margin-bottom:16px;position:relative;box-shadow:0 0 20px var(--glow),inset 0 1px 0 #ffffff12;display:none}
+.press-id.show{display:block;animation:fadeUp .35s ease both}
+.pid-header{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:10px}
+.pid-logo{font-size:19px}
+.pid-org{font-family:'Jua',sans-serif;font-size:11px;color:var(--moon);letter-spacing:2px;line-height:1.4}
+.pid-badge{margin-left:auto;background:var(--moon);color:#1a1400;font-size:9px;font-weight:800;letter-spacing:1px;padding:2px 8px;border-radius:20px}
+.pid-body{display:flex;align-items:center;gap:11px}
+.pid-avatar{width:46px;height:46px;background:linear-gradient(135deg,#1a3a6a,var(--accent));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:23px;flex-shrink:0}
+.pid-name{font-family:'Jua',sans-serif;font-size:21px;color:#fff;margin-bottom:2px}
+.pid-role{font-size:12px;color:var(--ink);letter-spacing:1px}
+.pid-num{position:absolute;bottom:7px;right:11px;font-size:10px;color:#ffffff22;letter-spacing:2px;font-weight:800}
+
+/* 페이지 타이틀 */
+.page-title{text-align:center;margin-bottom:20px;animation:fadeDown .6s ease both}
+.page-title .badge{display:inline-block;background:var(--moon);color:#1a1400;font-family:'Jua',sans-serif;font-size:11px;letter-spacing:3px;padding:3px 12px;border-radius:20px;margin-bottom:7px}
+.page-title h1{font-family:'Jua',sans-serif;font-size:clamp(25px,7vw,40px);color:var(--moon);text-shadow:0 0 20px var(--glow);line-height:1.2}
+.page-title p{color:var(--ink);font-size:13px;margin-top:5px;line-height:1.6}
+
+/* 브리핑 */
+.briefing{background:#fef9ec;color:#2a2000;border-radius:10px;padding:15px 17px;font-size:13px;line-height:1.9;margin-bottom:18px;position:relative;box-shadow:2px 4px 12px #00000044;border-top:4px solid var(--moon)}
+.briefing::after{content:'기밀 문서';position:absolute;top:7px;right:11px;font-size:10px;color:#c0392b88;font-weight:800;letter-spacing:2px;transform:rotate(4deg)}
+
+/* 게임오버 */
+#gameover-overlay{position:fixed;inset:0;z-index:300;background:#00000088;backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+#gameover-overlay.show{opacity:1;pointer-events:all}
+.go-card{background:var(--card2);border:2px solid var(--red);border-radius:22px;padding:32px 24px;text-align:center;box-shadow:0 0 55px #ff5a5a44;animation:cardIn .4s ease;max-width:320px;width:90%}
+.go-emoji{font-size:60px;margin-bottom:10px}
+.go-title{font-family:'Jua',sans-serif;font-size:26px;color:var(--red);margin-bottom:7px;text-shadow:0 0 18px #ff5a5a66}
+.go-desc{color:var(--ink);font-size:13px;line-height:1.8;margin-bottom:20px}
+.go-btn{width:100%;padding:13px;background:linear-gradient(135deg,#3a0a0a,var(--red));border:none;border-radius:12px;color:#fff;font-family:'Jua',sans-serif;font-size:16px;cursor:pointer;margin-bottom:9px;box-shadow:0 4px 16px #ff5a5a44;transition:transform .2s}
+.go-btn:hover{transform:translateY(-2px)}
+.go-btn2{width:100%;padding:12px;background:#ffffff09;border:1px solid var(--border);border-radius:12px;color:var(--ink);font-family:'Jua',sans-serif;font-size:14px;cursor:pointer;transition:background .2s}
+.go-btn2:hover{background:#ffffff16}
+
+/* 콤보팝업 */
+#combo-popup{position:fixed;top:34%;left:50%;transform:translate(-50%,-50%);font-family:'Jua',sans-serif;font-size:clamp(26px,8vw,50px);color:var(--orange);text-shadow:0 0 28px #fb923c88;pointer-events:none;z-index:200;opacity:0;transition:opacity .15s}
+
+/* 완료 */
+.final-score{font-family:'Jua',sans-serif;font-size:54px;color:var(--moon);text-shadow:0 0 22px var(--glow);text-align:center;line-height:1.1}
+.rank-badge{display:inline-block;background:linear-gradient(135deg,#2a1a00,#6a4500);border:2px solid var(--moon);border-radius:12px;padding:7px 18px;font-family:'Jua',sans-serif;font-size:15px;color:var(--moon)}
+#email-status{text-align:center;font-size:13px;color:var(--ink);min-height:20px;margin-bottom:14px}
+
+/* 비밀 코드 조각 */
+.code-strip{width:100%;max-width:640px;margin-bottom:14px;animation:fadeDown .5s .15s ease both}
+.code-strip-inner{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:8px 12px}
+.code-label{font-size:11px;color:var(--ink);font-weight:800;letter-spacing:1px;white-space:nowrap;margin-right:2px}
+.code-slots{display:flex;gap:5px;flex:1}
+.code-slot{
+  flex:1;height:34px;
+  border-radius:8px;
+  border:2px solid var(--border);
+  background:#ffffff07;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Jua',sans-serif;font-size:15px;font-weight:800;
+  color:transparent;
+  transition:all .4s;
+  position:relative;overflow:hidden;
+}
+.code-slot.unlocked{
+  border-color:var(--moon);
+  background:linear-gradient(135deg,#2a1e00,#3a2c00);
+  color:var(--moon);
+  box-shadow:0 0 10px var(--glow);
+  animation:slotReveal .5s ease both;
+}
+@keyframes slotReveal{
+  0%{transform:scale(0) rotate(-20deg);opacity:0}
+  60%{transform:scale(1.2) rotate(5deg)}
+  100%{transform:scale(1) rotate(0);opacity:1}
+}
+
+/* ── 전체 취재 지도 — 코르크 보드 스타일 ── */
+.world-map-wrap{width:100%;max-width:640px;margin-bottom:16px;animation:fadeDown .5s .1s ease both}
+.world-map-card{
+  background:
+    repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(0,0,0,.04) 28px,rgba(0,0,0,.04) 29px),
+    repeating-linear-gradient(90deg,transparent,transparent 28px,rgba(0,0,0,.04) 28px,rgba(0,0,0,.04) 29px),
+    linear-gradient(135deg,#3d2b1a 0%,#4a3520 40%,#3a2510 100%);
+  border:3px solid #5a3e25;
+  border-radius:12px;padding:14px 12px 18px;padding-top:36px;
+  position:relative;overflow:visible;
+  box-shadow:0 6px 28px #00000077, inset 0 1px 0 #ffffff18, inset 0 -1px 0 #00000044;
+}
+/* 코르크 테두리 질감 */
+.world-map-card::before{
+  content:'';position:absolute;inset:0;
+  border-radius:10px;
+  background:
+    radial-gradient(ellipse at 10% 20%,rgba(255,200,120,.06) 0%,transparent 50%),
+    radial-gradient(ellipse at 90% 80%,rgba(200,140,60,.06) 0%,transparent 50%);
+  pointer-events:none;
+}
+.map-title{
+  font-family:'Jua',sans-serif;font-size:12px;
+  color:#c8a060;letter-spacing:3px;
+  text-align:center;margin-bottom:10px;
+  text-shadow:0 1px 2px #00000088;
+}
+/* 핀 노드 상태 */
+.pin-shadow{filter:drop-shadow(1px 3px 4px rgba(0,0,0,.5))}
+.pin-done .pin-head{fill:#4ade80}
+.pin-done .pin-body{fill:#2d8a50}
+.pin-today .pin-head{fill:#f7e96a;filter:drop-shadow(0 0 6px #ffe944aa)}
+.pin-today .pin-body{fill:#b8a020}
+.pin-locked .pin-head{fill:#8a7060}
+.pin-locked .pin-body{fill:#5a4030}
+.pin-future .pin-head{fill:#4a3828;opacity:.5}
+.pin-future .pin-body{fill:#3a2818;opacity:.5}
+/* 실 경로 */
+.map-thread{stroke:#c8906044;stroke-width:1.5;fill:none;stroke-dasharray:none}
+.map-thread.lit{stroke:#f7e96a55;stroke-width:2}
+/* 라벨 종이 */
+.label-paper-done rect{fill:#d4f0c0;stroke:#4ade80;stroke-width:1}
+.label-paper-today rect{fill:#fff8d0;stroke:#f7e96a;stroke-width:1.5}
+.label-paper-locked rect{fill:#8a7060;stroke:#6a5040;stroke-width:1;opacity:.6}
+.label-paper-future rect{fill:#4a3828;stroke:#3a2818;stroke-width:1;opacity:.3}
+.label-text-done{fill:#1a5a20;font-family:'Jua',sans-serif}
+.label-text-today{fill:#5a4a00;font-family:'Jua',sans-serif}
+.label-text-locked{fill:#c8b090;font-family:'Jua',sans-serif;opacity:.6}
+.label-text-future{fill:#6a5040;font-family:'Jua',sans-serif;opacity:.3}
+/* 오늘 배지 */
+.today-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#3d2b1a,#5a3e25);border:2px solid #c8a060;border-radius:8px;padding:5px 12px;margin-top:10px;font-family:'Jua',sans-serif;font-size:12px;color:#f0d090;box-shadow:0 2px 8px #00000055;animation:fadeUp .4s ease both;width:100%;justify-content:center;text-shadow:0 1px 2px #00000066}
+
+/* 코드 잠금해제 팝업 */
+#unlock-popup{
+  position:fixed;top:28%;left:50%;transform:translate(-50%,-50%);
+  background:linear-gradient(135deg,#1a2e00,#2a4500);
+  border:2px solid var(--moon);border-radius:16px;
+  padding:18px 28px;text-align:center;
+  font-family:'Jua',sans-serif;
+  box-shadow:0 0 40px var(--glow);
+  z-index:200;opacity:0;pointer-events:none;
+  transition:opacity .2s;
+}
+#unlock-popup.show{opacity:1}
+#unlock-popup .up-emoji{font-size:32px;margin-bottom:4px}
+#unlock-popup .up-title{font-size:16px;color:var(--moon);margin-bottom:2px}
+#unlock-popup .up-code{font-size:28px;color:#fff;letter-spacing:4px;text-shadow:0 0 16px var(--glow)}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-13px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:500}
+@media(max-width:380px){.card{padding:16px 13px}.map-dot{width:36px;height:36px;font-size:14px}.map-label{font-size:9px}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<canvas id="confetti"></canvas>
+<div id="combo-popup"></div>
+
+<!-- 게임오버 -->
+<div id="gameover-overlay">
+  <div class="go-card">
+    <div class="go-emoji">💔</div>
+    <div class="go-title">취재 실패!</div>
+    <div class="go-desc">목숨이 모두 사라졌어요...<br>하지만 포기하지 마세요!<br>다시 도전하면 특종을 잡을 수 있어요! 💪</div>
+    <button class="go-btn" onclick="retryGame()">🔄 다시 도전!</button>
+    <button class="go-btn2" onclick="goToName()">↩ 처음으로</button>
+  </div>
+</div>
+
+<!-- 이름 입력 -->
+<div id="layer-name" class="layer">
+  <div class="page-title">
+    <div class="badge">🌙 소요도서관 어린이 기자단</div>
+    <h1>달빛 취재</h1>
+    <p>책 속 사건의 진실을 밝혀라!</p>
+  </div>
+  <div class="card">
+    <div style="font-size:58px;text-align:center;margin-bottom:11px;animation:float 3s ease-in-out infinite">🪪</div>
+    <div style="font-family:'Jua',sans-serif;font-size:21px;color:var(--moon);text-align:center;margin-bottom:7px">기자증 발급</div>
+    <p style="text-align:center;color:var(--ink);font-size:13px;margin-bottom:18px;line-height:1.7">이름을 입력하고 기자증을 받으세요!</p>
+    <div class="press-id" id="pid-preview">
+      <div class="pid-header">
+        <span class="pid-logo">🌙</span>
+        <div class="pid-org">소요도서관<br>어린이 기자단</div>
+        <span class="pid-badge">PRESS</span>
+      </div>
+      <div class="pid-body">
+        <div class="pid-avatar">📰</div>
+        <div>
+          <div class="pid-name" id="pid-name-preview">?</div>
+          <div class="pid-role">🔍 달빛 취재 기자</div>
+        </div>
+      </div>
+      <div class="pid-num">SOYO-2025</div>
+    </div>
+    <input class="name-input" id="name-input" type="text" maxlength="6"
+      placeholder="이름을 입력하세요"
+      oninput="onNameInput(this.value)"
+      onkeydown="if(event.key==='Enter')goToIntro()">
+    <button class="start-btn" id="issue-btn" onclick="goToIntro()" disabled>🪪 기자증 발급받기</button>
+  </div>
+</div>
+
+<!-- 인트로 -->
+<div id="layer-intro" class="layer hidden">
+  <div class="page-title" style="margin-bottom:10px">
+    <div class="badge">🌙 소요도서관 어린이 기자단</div>
+    <h1>달빛 취재</h1>
+  </div>
+
+  <div class="card" style="width:100%;max-width:640px">
+    <!-- 기자증 (컴팩트) -->
+    <div class="press-id show" style="margin-bottom:12px">
+      <div class="pid-header">
+        <span class="pid-logo">🌙</span>
+        <div class="pid-org">소요도서관 어린이 기자단</div>
+        <span class="pid-badge">PRESS</span>
+      </div>
+      <div class="pid-body">
+        <div class="pid-avatar" style="width:36px;height:36px;font-size:18px">📰</div>
+        <div>
+          <div class="pid-name" id="intro-name" style="font-size:18px"></div>
+          <div class="pid-role" style="font-size:11px">🔍 달빛 취재 기자</div>
+        </div>
+      </div>
+      <div class="pid-num">SOYO-2025</div>
+    </div>
+
+    <!-- 취재 지도 -->
+    <div style="background:
+        repeating-linear-gradient(0deg,transparent,transparent 22px,rgba(0,0,0,.05) 22px,rgba(0,0,0,.05) 23px),
+        repeating-linear-gradient(90deg,transparent,transparent 22px,rgba(0,0,0,.05) 22px,rgba(0,0,0,.05) 23px),
+        linear-gradient(135deg,#3d2b1a,#4a3520 40%,#3a2510);
+      border:2px solid #6a4e30;border-radius:12px;
+      padding:10px 10px 14px;margin-bottom:12px;
+      box-shadow:inset 0 2px 8px #00000044;
+      position:relative;overflow:visible">
+      <div style="font-family:'Jua',sans-serif;font-size:11px;color:#c8a060;letter-spacing:2px;text-align:center;margin-bottom:4px">📌 달빛 취재 지도</div>
+      <div id="world-map-svg"></div>
+      <div id="today-region-badge"></div>
+    </div>
+
+    <!-- 규칙 (한 줄 요약) -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+      <span style="background:#ff5a5a22;border:1px solid #ff5a5a44;border-radius:8px;padding:4px 10px;font-size:12px;color:var(--red)">❤️ 목숨 3개</span>
+      <span style="background:#ffe94422;border:1px solid #ffe94444;border-radius:8px;padding:4px 10px;font-size:12px;color:var(--moon)">⭐ 첫 정답 +50</span>
+      <span style="background:#fb923c22;border:1px solid #fb923c44;border-radius:8px;padding:4px 10px;font-size:12px;color:var(--orange)">🔥 콤보 보너스</span>
+      <span style="background:#4ade8022;border:1px solid #4ade8044;border-radius:8px;padding:4px 10px;font-size:12px;color:var(--green)">🔐 비밀 단어</span>
+    </div>
+
+    <button class="start-btn" onclick="startGame()">📸 취재 출발!</button>
+  </div>
+</div>
+
+<!-- 코드 잠금해제 팝업 -->
+<div id="unlock-popup">
+  <div class="up-emoji">🔓</div>
+  <div class="up-title">비밀 단어 획득!</div>
+  <div class="up-code" id="unlock-char"></div>
+</div>
+
+<!-- 퀴즈 -->
+<div id="layer-quiz" class="layer hidden">
+  <div class="hud">
+    <div class="hud-org">🌙 소요도서관 달빛취재</div>
+    <div class="hud-lives" id="hud-lives"></div>
+  </div>
+  <div class="score-bar">
+    <div class="score-box">⭐ <span id="score-disp">0</span>점</div>
+    <div class="combo-box" id="combo-disp">🔥 콤보 0</div>
+    <div style="margin-left:auto;font-size:12px;color:var(--ink)" id="stage-counter">1/5</div>
+  </div>
+  <!-- 비밀 코드 조각 바 -->
+  <div class="code-strip">
+    <div class="code-strip-inner">
+      <span class="code-label">🔐 비밀코드</span>
+      <div class="code-slots" id="code-slots"></div>
+    </div>
+  </div>
+  <div class="map-wrap"><div class="map-track" id="map-track"></div></div>
+  <div class="card" id="quiz-card">
+    <div class="mtag"><span id="m-icon">🔍</span>&nbsp;<span id="m-label">취재 미션</span></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="q-hint" id="q-hint"></div>
+    <div class="choices" id="choices"></div>
+    <div class="feedback" id="feedback">
+      <span class="fb-icon" id="fb-icon"></span>
+      <div>
+        <div class="fb-t" id="fb-t"></div>
+        <div class="fb-d" id="fb-d"></div>
+      </div>
+    </div>
+    <button class="next-btn" id="next-btn" onclick="nextStage()">다음 취재 현장으로 →</button>
+  </div>
+</div>
+
+<!-- 완료 -->
+<div id="layer-complete" class="layer hidden">
+  <div class="page-title">
+    <div class="badge">🌙 소요도서관 어린이 기자단</div>
+    <h1>특종 완성!</h1>
+  </div>
+  <div class="card">
+    <div style="font-size:68px;text-align:center;margin-bottom:9px;animation:float 2.5s ease-in-out infinite">🏆</div>
+    <div style="font-family:'Jua',sans-serif;font-size:19px;color:var(--moon);text-align:center;margin-bottom:4px" id="complete-name"></div>
+    <p style="text-align:center;color:var(--ink);font-size:13px;margin-bottom:16px;line-height:1.7">끈질긴 취재로 모든 사건을 밝혔어요!</p>
+    <div style="background:var(--card2);border:1px solid var(--border);border-radius:13px;padding:18px;text-align:center;margin-bottom:12px">
+      <div style="font-size:12px;color:var(--ink);margin-bottom:4px">🌙 최종 취재 점수</div>
+      <div class="final-score" id="final-score-val">0</div>
+      <div style="font-size:13px;color:var(--ink);margin-top:5px" id="final-sub"></div>
+    </div>
+    <div style="text-align:center;margin-bottom:14px"><div class="rank-badge" id="rank-badge"></div></div>
+    <!-- 5일 단어 수집 진행 -->
+    <div style="background:linear-gradient(135deg,#0e1e0a,#1a2e10);border:2px solid var(--moon);border-radius:14px;padding:16px;margin-bottom:14px">
+      <div style="font-size:12px;color:var(--ink);text-align:center;margin-bottom:10px;letter-spacing:1px">🔐 비밀 문장 수집 현황</div>
+      <div id="final-code-area"></div>
+    </div>
+    <div id="email-status"></div>
+    <button class="retry-btn" onclick="retryGame()">🔄 다시 취재하기</button>
+  </div><!-- card 끝 -->
+
+  <!-- 도전 미션 — 카드 밖에 위치 -->
+  <div style="width:100%;max-width:640px;margin-top:12px">
+    <button id="challenge-open-btn" onclick="openChallenge()" style="width:100%;padding:16px;background:linear-gradient(135deg,#2a1500,var(--orange));border:none;border-radius:13px;color:#fff;font-family:'Jua',sans-serif;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px #fb923c44;transition:transform .2s">
+      🔥 도전 기자 미션 도전하기!
+    </button>
+
+    <div id="challenge-area" style="margin-top:12px;display:none">
+      <div style="background:linear-gradient(135deg,#1a0a2a,#2d1045);border:2px solid var(--orange);border-radius:16px;padding:18px;box-shadow:0 8px 32px #fb923c22">
+        <div style="font-family:'Jua',sans-serif;font-size:18px;color:var(--orange);margin-bottom:4px;text-align:center">🔥 도전 기자 미션!</div>
+        <div style="font-size:12px;color:var(--ink);text-align:center;margin-bottom:16px">자유롭게 생각을 써봐요 ✏️</div>
+        <div id="challenge-questions"></div>
+        <button class="start-btn" id="challenge-submit-btn" onclick="submitChallenge()" style="background:linear-gradient(135deg,#3a1a00,var(--orange));box-shadow:0 4px 20px #fb923c44;margin-top:4px">
+          📨 선생님께 제출하기!
+        </button>
+        <div id="challenge-status" style="text-align:center;font-size:13px;color:var(--ink);margin-top:10px;min-height:18px"></div>
+      </div>
+    </div>
+  </div>
+</div><!-- layer-complete 끝 -->
+
+<script>
+// ══ 5일 비밀 문장 시스템 ══
+// ★ 선생님이 바꾸는 곳 — 행사 시작일과 날짜별 단어
+const START_DATE = '2025-06-01'; // ← 행사 첫날 날짜 (YYYY-MM-DD)
+
+// 날짜별 단어 (5글자로 패딩, 짧은 단어는 '✦'으로 채움)
+const DAY_WORDS = [
+  '사랑스러운',  // 1일차 5글자
+  '자질들은✦',  // 2일차 4글자 → ✦ 추가
+  '자연스럽게',  // 3일차 5글자
+  '드러나는✦',  // 4일차 4글자 → ✦ 추가
+  '법이다✦✦',  // 5일차 3글자 → ✦✦ 추가
+];
+const FULL_SENTENCE = '사랑스러운 자질들은 자연스럽게 드러나는 법이다';
+
+// 오늘이 몇 일차인지 계산 (1~5)
+function getTodayDay(){
+  const start = new Date(START_DATE);
+  const today = new Date();
+  start.setHours(0,0,0,0); today.setHours(0,0,0,0);
+  const diff = Math.floor((today - start) / 86400000) + 1;
+  return Math.max(1, Math.min(diff, 5));
+}
+
+// 오늘 단어를 글자 배열로 반환 (항상 5칸)
+function getTodayChars(){
+  const word = DAY_WORDS[todayDay - 1] || '?????';
+  return [...word]; // 유니코드 글자 단위로 분리
+}
+
+const STAGES=[
+  {icon:'🐷',label:'현장1: 가족을 찾아라!',mission:'가족이 몇 명인지 파악하라!',
+   question:'돼지책에 나오는 가족은 모두 몇 명인가요?',
+   hint:'💡 엄마, 아빠, 그리고 아이들을 세어봐요!',
+   choices:['2명','3명','4명','5명'],answer:2,
+   ok:'🎉 정답! 엄마, 아빠, 아들 둘 해서 4명이에요!',ok_desc:'가족 명단 확보! 첫 번째 증거 수집!',
+   ng:'아쉬워요! 정답은 4명이에요.',ng_desc:'엄마, 아빠, 아들이 몇 명인지 다시 세어봐요.'},
+  {icon:'🍳',label:'현장2: 엄마의 하루',mission:'엄마가 한 일을 확인하라!',
+   question:'엄마가 집에서 하는 일이 아닌 것은 무엇인가요?',
+   hint:'💡 엄마가 매일 바쁘게 하는 일들을 떠올려봐요!',
+   choices:['밥하기','청소하기','빨래하기','축구하기'],answer:3,
+   ok:'⚽ 맞아요! 엄마는 축구는 안 했어요!',ok_desc:'엄마의 하루 일과 확인 완료!',
+   ng:'아쉬워요! 정답은 축구하기예요.',ng_desc:'엄마가 집에서 한 일을 다시 생각해봐요.'},
+  {icon:'🏠',label:'현장3: 사건 현장',mission:'엄마가 사라진 뒤를 조사하라!',
+   question:'엄마가 없어지자 집이 어떻게 됐나요?',
+   hint:'💡 아빠와 아이들만 남은 집은 어떤 모습이었을까요?',
+   choices:['더러워졌다','깨끗해졌다','불이 났다','파티를 했다'],answer:0,
+   ok:'🏠 정확해요! 집이 엉망이 됐어요!',ok_desc:'사건 현장 사진 확보!',
+   ng:'아쉬워요! 정답은 더러워졌다예요.',ng_desc:'엄마 없이 아빠와 아이들만 있는 집을 떠올려봐요.'},
+  {icon:'🐽',label:'현장4: 돼지의 비밀',mission:'돼지로 변한 이유를 밝혀라!',
+   question:'아빠와 아이들이 돼지처럼 변한 건 왜일까요?',
+   hint:'💡 아빠와 아이들은 집에서 어떻게 지냈나요?',
+   choices:['마법에 걸려서','게으르고 이기적이어서','배가 고파서','아파서'],answer:1,
+   ok:'🐷 정답! 게으르고 이기적인 모습이 돼지 같았던 거예요!',ok_desc:'핵심 단서 발견!',
+   ng:'아쉬워요! 정답은 게으르고 이기적이어서예요.',ng_desc:'아빠와 아이들의 행동을 생각해봐요.'},
+  {icon:'📰',label:'현장5: 특종 완성',mission:'가족의 변화를 기사로 써라!',
+   question:'엄마가 돌아온 뒤 가족이 함께 한 일은?',
+   hint:'💡 달라진 가족의 모습을 떠올려봐요!',
+   choices:['요리만 했다','청소만 했다','자동차만 고쳤다','집안일을 모두 함께 했다'],answer:3,
+   ok:'🏆 완벽해요! 가족 모두가 함께 도왔어요!',ok_desc:'달빛 기자단의 취재 성공! 🌙',
+   ng:'아쉬워요! 정답은 집안일을 모두 함께 했다예요.',ng_desc:'엄마가 돌아온 뒤 달라진 가족을 떠올려봐요.'},
+];
+
+// ══ 상태 ══
+let reporterName='',currentStage=0,score=0,combo=0,lives=3;
+let answered=false,usedRetry=false;
+let unlockedCodes=[];
+let todayDay = 1; // 1일차 고정
+const MAX_LIVES=3, BASE=100, BONUS=50, COMBO_B=30;
+const NUMS=['①','②','③','④'];
+
+function showLayer(id){
+  ['layer-name','layer-intro','layer-quiz','layer-complete']
+    .forEach(l=>document.getElementById(l).classList.toggle('hidden',l!==id));
+  // 화면 전환 시 맨 위로
+  const el=document.getElementById(id);
+  if(el) el.scrollTop=0;
+}
+
+// ══ 취재 지역 데이터 ★ 책 정해지면 이름/아이콘 교체! ══
+const REGIONS = [
+  { day:1, icon:'🐷', name:'피곳\n가족 집',   desc:'1일차 취재지' },
+  { day:2, icon:'🍳', name:'엄마의\n부엌',     desc:'2일차 취재지' },
+  { day:3, icon:'🏠', name:'사건\n현장',       desc:'3일차 취재지' },
+  { day:4, icon:'🐽', name:'돼지의\n비밀',     desc:'4일차 취재지' },
+  { day:5, icon:'📰', name:'달빛\n신문사',     desc:'5일차 취재지' },
+];
+
+// ══ 도전 문제 (서술형 — 고학년용) ══
+const CHALLENGE_QS = [
+  '엄마는 왜 편지 한 장만 남기고 떠났을까요? 엄마의 마음이 어땠을 것 같아요? 자유롭게 써봐요!',
+  '만약 내가 이 집의 아빠나 아이였다면 어떻게 했을까요? 내 생각을 써봐요!',
+  '우리 집에서 내가 더 도울 수 있는 일이 있다면 뭐가 있을까요?',
+];
+
+// SVG 지도 렌더 — 코르크 보드 + 핀 + 불규칙 지형
+function renderWorldMap(){
+  const el = document.getElementById('world-map-svg');
+  if(!el) return;
+  const W=320, H=170;
+
+  // 불규칙한 위치
+  const pos=[
+    {x:40,  y:125}, // 1 — 왼쪽 아래
+    {x:100, y:58},  // 2 — 왼쪽 위
+    {x:168, y:138}, // 3 — 가운데 아래
+    {x:242, y:52},  // 4 — 오른쪽 위
+    {x:292, y:115}, // 5 — 오른쪽 아래
+  ];
+
+  // viewBox: 위쪽(라벨 공간) 넉넉히, 양옆도 여유
+  let svg=`<svg viewBox="-20 -45 ${W+40} ${H+60}" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block">
+  <defs>
+    <filter id="ps"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000" flood-opacity=".6"/></filter>
+    <filter id="gs"><feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#4ade80" flood-opacity=".5"/></filter>
+    <filter id="ys"><feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#f7e96a" flood-opacity=".7"/></filter>
+  </defs>`;
+
+  // 지형 장식 — 산/나무/물결 SVG 모양
+  const terrains=[
+    `<path d="M120,90 L130,72 L140,90 Z" fill="#5a4030" opacity=".4"/>`,
+    `<path d="M195,70 L207,48 L219,70 Z" fill="#5a4030" opacity=".35"/>`,
+    `<path d="M55,80 Q58,75 61,80 Q64,75 67,80" stroke="#5a7030" stroke-width="1.5" fill="none" opacity=".5"/>`,
+    `<circle cx="255" cy="95" r="4" fill="#4a6028" opacity=".4"/>
+     <rect x="253" y="82" width="4" height="13" fill="#6a4030" opacity=".4"/>`,
+    `<path d="M150,155 Q155,150 160,155 Q165,150 170,155" stroke="#4a6088" stroke-width="1.5" fill="none" opacity=".45"/>`,
+    `<path d="M70,145 Q75,140 80,145" stroke="#4a6088" stroke-width="1.5" fill="none" opacity=".35"/>`,
+  ];
+  terrains.forEach(t=>{ svg+=t; });
+
+  // 실 연결선
+  for(let i=0;i<pos.length-1;i++){
+    const a=pos[i],b=pos[i+1];
+    const lit=i+1<todayDay;
+    // 살짝 굽은 실 (중간점을 약간 비틈)
+    const off=(i%2===0?-12:14);
+    const mx=(a.x+b.x)/2+off*0.3, my=(a.y+b.y)/2+off;
+    svg+=`<path d="M${a.x},${a.y-6} Q${mx},${my} ${b.x},${b.y-6}"
+      stroke="${lit?'#f7e96a66':'#c8906033'}" stroke-width="${lit?2:1.5}"
+      fill="none" stroke-linecap="round"/>`;
+  }
+
+  // 핀 + 라벨
+  REGIONS.forEach((r,i)=>{
+    const {x,y}=pos[i];
+    const state=i+1<todayDay?'done':i+1===todayDay?'today':i+1===todayDay+1?'locked':'future';
+
+    const pinColor   ={done:'#4ade80',today:'#f7e96a',locked:'#8a7060',future:'#3a2818'}[state];
+    const pinStem    ={done:'#2d8a50',today:'#b8a020',locked:'#5a4030',future:'#2a1810'}[state];
+    const labelBg    ={done:'#c8f0b0',today:'#fff8c0',locked:'#7a6050',future:'#3a2818'}[state];
+    const labelBorder={done:'#4ade80',today:'#f7e96a',locked:'#5a4030',future:'#2a1810'}[state];
+    const labelColor ={done:'#1a5a10',today:'#5a4000',locked:'#c0a080',future:'#5a4030'}[state];
+    const labelOp    ={done:1,today:1,locked:.7,future:.35}[state];
+    const filt       =state==='done'?'url(#gs)':state==='today'?'url(#ys)':'url(#ps)';
+
+    const lines=r.name.split('\n');
+    // 한글은 글자당 약 13px (영문보다 넓음)
+    const lw=Math.max(...lines.map(l=>[...l].length))*13+16;
+    const lh=lines.length>1?30:19;
+    // 라벨 위치 — 핀 위
+    const lx=x-lw/2, ly=y-lh-26;
+
+    // 오늘 맥동 링
+    if(state==='today'){
+      svg+=`<circle cx="${x}" cy="${y}" r="18" fill="none" stroke="#f7e96a55" stroke-width="2"
+        style="animation:nodePulse 1.5s ease-in-out infinite"/>`;
+    }
+
+    // 라벨 종이
+    svg+=`<g opacity="${labelOp}">
+      <rect x="${lx}" y="${ly}" width="${lw}" height="${lh}" rx="3"
+        fill="${labelBg}" stroke="${labelBorder}" stroke-width="1.2"/>
+      <text x="${x}" y="${ly+11}" text-anchor="middle" font-size="10"
+        font-family="Jua,sans-serif" fill="${labelColor}">${lines[0]}</text>
+      ${lines[1]?`<text x="${x}" y="${ly+22}" text-anchor="middle" font-size="10"
+        font-family="Jua,sans-serif" fill="${labelColor}">${lines[1]}</text>`:''}
+    </g>`;
+
+    // 핀 몸통 (세로선)
+    svg+=`<line x1="${x}" y1="${ly+lh}" x2="${x}" y2="${y-2}"
+      stroke="${pinStem}" stroke-width="2.5" stroke-linecap="round" filter="${filt}"/>`;
+
+    // 핀 꼭지 원
+    svg+=`<circle cx="${x}" cy="${y}" r="10" fill="${pinColor}" filter="${filt}"/>`;
+
+    // 핀 내용 (아이콘 or 체크)
+    if(state==='done'){
+      svg+=`<text x="${x}" y="${y+5}" text-anchor="middle" font-size="12" fill="#fff">✓</text>`;
+    } else if(state==='locked'||state==='future'){
+      svg+=`<text x="${x}" y="${y+5}" text-anchor="middle" font-size="11" fill="#c0a08088">🔒</text>`;
+    } else {
+      svg+=`<text x="${x}" y="${y+5}" text-anchor="middle" font-size="12">${r.icon}</text>`;
+    }
+
+    // 일차 라벨 (핀 아래)
+    svg+=`<text x="${x}" y="${y+22}" text-anchor="middle" font-size="9"
+      font-family="Jua,sans-serif" fill="${labelColor}" opacity="${labelOp*.8}">${r.desc}</text>`;
+  });
+
+  svg+=`</svg>`;
+  el.innerHTML=svg;
+
+  // 오늘 취재지 배지
+  const badge=document.getElementById('today-region-badge');
+  if(badge){
+    const today=REGIONS[todayDay-1];
+    badge.innerHTML=`<div style="text-align:center;margin-top:8px;font-family:'Jua',sans-serif;font-size:12px;color:#f0d090;background:linear-gradient(135deg,#3d2b1a,#5a3e25);border:1.5px solid #c8a060;border-radius:8px;padding:5px 12px;display:inline-block;box-shadow:0 2px 8px #00000055">📌 오늘의 취재지: ${today.icon} ${today.name.replace('\n',' ')}</div>`;
+    badge.style.textAlign='center';
+  }
+}
+
+// ── 이름
+function onNameInput(v){
+  const t=v.trim();
+  document.getElementById('pid-name-preview').textContent=t||'?';
+  const btn=document.getElementById('issue-btn');
+  if(t){document.getElementById('pid-preview').classList.add('show');btn.disabled=false;}
+  else btn.disabled=true;
+}
+function goToIntro(){
+  const v=document.getElementById('name-input').value.trim();
+  if(!v)return;
+  reporterName=v;
+  document.getElementById('intro-name').textContent=v;
+  showLayer('layer-intro');
+  renderWorldMap();
+  launchConfetti(1);
+}
+function goToName(){
+  document.getElementById('gameover-overlay').classList.remove('show');
+  showLayer('layer-name');
+}
+
+// ── 게임
+function startGame(){
+  currentStage=0;score=0;combo=0;lives=MAX_LIVES;unlockedCodes=[];
+  showLayer('layer-quiz');
+  renderCodeSlots();
+  renderHUD();renderStage();
+}
+function retryGame(){
+  document.getElementById('gameover-overlay').classList.remove('show');
+  startGame();
+}
+
+// ── 글자 슬롯 초기화 (게임 시작 시)
+function renderCodeSlots(){
+  const el = document.getElementById('code-slots');
+  el.innerHTML = '';
+  const chars = getTodayChars();
+  chars.forEach((ch, i) => {
+    const slot = document.createElement('div');
+    slot.className = 'code-slot';
+    slot.id = `code-slot-${i}`;
+    slot.style.fontSize = '18px';
+    slot.style.minWidth = '36px';
+    slot.textContent = '?';
+    el.appendChild(slot);
+  });
+}
+
+// ── 단계 클리어 → 글자 하나 공개!
+function unlockCode(stageIdx){
+  const chars = getTodayChars();
+  const ch = chars[stageIdx];
+  unlockedCodes.push(ch);
+
+  const slot = document.getElementById(`code-slot-${stageIdx}`);
+  if(slot){
+    slot.textContent = ch;
+    slot.style.fontSize = ch === '✦' ? '14px' : '18px';
+    slot.style.opacity = ch === '✦' ? '0.4' : '1';
+    slot.classList.add('unlocked');
+  }
+
+  // 팝업 — ✦(빈칸)이면 표시 생략
+  if(ch !== '✦'){
+    const pop = document.getElementById('unlock-popup');
+    document.getElementById('unlock-char').textContent = ch;
+    pop.classList.add('show');
+    setTimeout(() => pop.classList.remove('show'), 1400);
+  }
+}
+
+// ── HUD
+function renderHUD(){
+  const el=document.getElementById('hud-lives');
+  el.innerHTML='';
+  for(let i=0;i<MAX_LIVES;i++){
+    const h=document.createElement('span');
+    h.className='heart'+(i>=lives?' lost':'');
+    h.textContent='❤️';el.appendChild(h);
+  }
+  document.getElementById('score-disp').textContent=score;
+  const cb=document.getElementById('combo-disp');
+  cb.textContent=`🔥 콤보 ${combo}`;
+  if(combo>=2){cb.style.color='var(--orange)';cb.style.textShadow='0 0 10px #fb923c66';}
+  else{cb.style.color='var(--ink)';cb.style.textShadow='none';}
+}
+
+// ── 지도
+function renderMap(){
+  const track=document.getElementById('map-track');
+  track.innerHTML='';
+  const icons=['🔍','🗺️','⏰','🔑','📰'];
+  STAGES.forEach((_,i)=>{
+    const node=document.createElement('div');node.className='map-node';
+    const dot=document.createElement('div');
+    const lbl=document.createElement('div');lbl.className='map-label';
+    if(i<currentStage){dot.className='map-dot done';dot.textContent='✓';}
+    else if(i===currentStage){dot.className='map-dot active';dot.textContent=icons[i];lbl.className='map-label active-lbl';}
+    else{dot.className='map-dot locked';dot.textContent=icons[i];}
+    lbl.textContent=`현장${i+1}`;
+    node.appendChild(dot);node.appendChild(lbl);track.appendChild(node);
+  });
+  document.getElementById('stage-counter').textContent=`${currentStage+1}/${STAGES.length}`;
+}
+
+// ── 스테이지
+function renderStage(){
+  answered=false;usedRetry=false;
+  const s=STAGES[currentStage];
+  renderMap();
+  document.getElementById('m-icon').textContent=s.icon;
+  document.getElementById('m-label').textContent=s.mission;
+  document.getElementById('q-text').textContent=s.question;
+  document.getElementById('q-hint').textContent=s.hint;
+  const ce=document.getElementById('choices');ce.innerHTML='';
+  s.choices.forEach((c,i)=>{
+    const btn=document.createElement('button');btn.className='cbtn';
+    btn.innerHTML=`<span class="num">${NUMS[i]}</span>${c}`;
+    btn.onclick=()=>checkAnswer(i,btn);ce.appendChild(btn);
+  });
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('next-btn').className='next-btn';
+  const card=document.getElementById('quiz-card');
+  card.style.animation='none';
+  requestAnimationFrame(()=>{card.style.animation='cardIn .4s ease both';});
+}
+
+// ── 정답 체크
+function checkAnswer(idx,btn){
+  if(answered)return;
+  const s=STAGES[currentStage];
+  const allBtns=document.querySelectorAll('.cbtn');
+  const fb=document.getElementById('feedback');
+  const next=document.getElementById('next-btn');
+
+  if(idx===s.answer){
+    answered=true;
+    allBtns.forEach(b=>b.disabled=true);
+    btn.classList.add('correct');
+    let gained=BASE;
+    if(!usedRetry)gained+=BONUS;
+    combo++;
+    if(combo>=2)gained+=COMBO_B*(combo-1);
+    score+=gained;renderHUD();
+    fb.className='feedback ok show';
+    document.getElementById('fb-icon').textContent='🎉';
+    document.getElementById('fb-t').textContent=s.ok+(combo>=2?` 🔥 ${combo}콤보!`:'');
+    document.getElementById('fb-d').textContent=s.ok_desc+(gained>BASE?` (+${gained-BASE}점 보너스!)`:'');
+    launchConfetti();
+    if(combo>=2)showComboPopup(combo);
+    // 🔓 코드 조각 잠금 해제!
+    setTimeout(()=>unlockCode(currentStage), 400);
+    const isLast=currentStage===STAGES.length-1;
+    next.textContent=isLast?'🏆 특종 기사 완성!':'다음 취재 현장으로 →';
+    next.className='next-btn show';
+  } else {
+    btn.classList.add('wrong');btn.disabled=true;
+    if(!usedRetry){
+      usedRetry=true;combo=0;lives--;renderHUD();
+      // 하트 흔들기
+      const hearts=document.querySelectorAll('.heart');
+      hearts.forEach(h=>{h.style.animation='none';requestAnimationFrame(()=>{h.style.animation='';});});
+      if(lives<=0){
+        setTimeout(()=>document.getElementById('gameover-overlay').classList.add('show'),700);
+        return;
+      }
+      fb.className='feedback retry show';
+      document.getElementById('fb-icon').textContent='🤔';
+      document.getElementById('fb-t').textContent='아쉬워요! 한 번 더 기회가 있어요!';
+      document.getElementById('fb-d').textContent=`목숨 -1 (남은 목숨: ${lives}개) 잘 생각해보고 다시 도전!`;
+    } else {
+      answered=true;combo=0;
+      allBtns.forEach(b=>b.disabled=true);
+      allBtns[s.answer].classList.add('correct');
+      renderHUD();
+      fb.className='feedback ng show';
+      document.getElementById('fb-icon').textContent='😢';
+      document.getElementById('fb-t').textContent=s.ng;
+      document.getElementById('fb-d').textContent=s.ng_desc;
+      const isLast=currentStage===STAGES.length-1;
+      next.textContent=isLast?'🏆 특종 기사 완성!':'다음 취재 현장으로 →';
+      next.className='next-btn show';
+    }
+  }
+}
+
+function nextStage(){
+  currentStage++;
+  if(currentStage>=STAGES.length)showComplete();
+  else renderStage();
+}
+
+// ── 완료
+function showComplete(){
+  showLayer('layer-complete');
+  document.getElementById('complete-name').textContent=reporterName+' 기자님, 수고하셨어요!';
+  document.getElementById('final-score-val').textContent=score+'점';
+  document.getElementById('final-sub').textContent=`남은 목숨 ${'❤️'.repeat(lives)} · 5단계 완주`;
+  let rank='';
+  if(lives===MAX_LIVES&&score>=(BASE+BONUS)*STAGES.length)rank='🌟 달빛 특종 기자상!';
+  else if(lives>0&&score>=BASE*STAGES.length)rank='📸 우수 취재상!';
+  else rank='📋 견습 기자상';
+  document.getElementById('rank-badge').textContent=rank;
+
+  // ── 오늘의 단어 크게 표시
+  renderTodayWord();
+
+  launchConfetti(3);
+  sendResultEmail(reporterName,score,lives,rank);
+}
+
+// ── 완료 화면 — 오늘의 단어 표시
+function renderTodayWord(){
+  const el = document.getElementById('final-code-area');
+  if(!el) return;
+  const day = todayDay;
+  const chars = getTodayChars();
+  const realChars = chars.filter(c => c !== '✦'); // 실제 글자만
+  const word = realChars.join('');
+
+  el.innerHTML = `
+    <div style="font-size:12px;color:var(--ink);margin-bottom:10px;letter-spacing:1px">
+      📅 ${day}일차 오늘의 단어
+    </div>
+
+    <!-- 글자 슬롯 (완료 화면용) -->
+    <div style="display:flex;gap:6px;justify-content:center;margin-bottom:14px">
+      ${chars.map((ch, i) => `
+        <div style="
+          width:44px;height:48px;
+          border-radius:10px;
+          border:2px solid ${ch==='✦'?'var(--border)':'var(--moon)'};
+          background:${ch==='✦'?'#ffffff07':'linear-gradient(135deg,#1a2e00,#2a4000)'};
+          display:flex;align-items:center;justify-content:center;
+          font-family:'Jua',sans-serif;
+          font-size:${ch==='✦'?'12px':'22px'};
+          color:${ch==='✦'?'var(--border)':'var(--moon)'};
+          box-shadow:${ch==='✦'?'none':'0 0 10px var(--glow)'};
+          animation:slotReveal .5s ${i*0.12}s ease both;
+        ">${ch==='✦'?'✦':ch}</div>
+      `).join('')}
+    </div>
+
+    <!-- 완성된 단어 크게 -->
+    <div style="
+      font-family:'Jua',sans-serif;
+      font-size:clamp(24px,6vw,36px);
+      color:var(--moon);
+      text-shadow:0 0 20px var(--glow);
+      letter-spacing:3px;
+      margin-bottom:12px;
+      animation:slotReveal .6s .6s ease both;
+      opacity:0;animation-fill-mode:both;
+    ">${word}</div>
+
+    <div style="font-size:13px;color:var(--ink);line-height:1.8">
+      ${day < 5
+        ? `<span style="color:var(--moon);font-weight:800">${day}/5</span>일 수집 완료!<br>이 단어를 수첩에 꼭 적어두세요 ✏️`
+        : `🎉 5일 모두 완료! 선생님의 문장 맞추기에 도전하세요!`
+      }
+    </div>
+  `;
+}
+
+// ── 도전 미션 열기
+function openChallenge(){
+  document.getElementById('challenge-open-btn').style.display='none';
+  const area=document.getElementById('challenge-area');
+  area.style.display='block';
+  area.style.animation='cardIn .4s ease both';
+
+  // 서술형 문제 렌더
+  const el=document.getElementById('challenge-questions');
+  el.innerHTML='';
+  CHALLENGE_QS.forEach((q,i)=>{
+    el.innerHTML+=`
+      <div style="margin-bottom:16px">
+        <div style="font-family:'Jua',sans-serif;font-size:14px;color:#fff;margin-bottom:8px;line-height:1.6">
+          Q${i+1}. ${q}
+        </div>
+        <textarea id="challenge-ans-${i}"
+          style="width:100%;min-height:80px;background:#ffffff0a;border:2px solid var(--border);
+          border-radius:10px;color:#fff;font-family:'Nanum Gothic',sans-serif;font-size:14px;
+          padding:10px 12px;resize:vertical;outline:none;line-height:1.6;
+          transition:border-color .2s"
+          placeholder="여기에 자유롭게 써봐요 ✏️"
+          onfocus="this.style.borderColor='var(--orange)'"
+          onblur="this.style.borderColor='var(--border)'"></textarea>
+      </div>`;
+  });
+}
+
+// ── 도전 미션 제출
+async function submitChallenge(){
+  const answers=CHALLENGE_QS.map((_,i)=>{
+    const el=document.getElementById(`challenge-ans-${i}`);
+    return el?el.value.trim():'';
+  });
+
+  const btn=document.getElementById('challenge-submit-btn');
+  const status=document.getElementById('challenge-status');
+  btn.disabled=true;
+  status.textContent='📨 제출 중...';status.style.color='var(--ink)';
+
+  const now=new Date().toLocaleString('ko-KR',{timeZone:'Asia/Seoul'});
+  const answerText=CHALLENGE_QS.map((q,i)=>
+    `Q${i+1}. ${q}\n답변: ${answers[i]||'(미작성)'}`
+  ).join('\n\n');
+
+  const prompt=`아래 정보로 Gmail을 통해 shiashia0504@gmail.com 으로 이메일을 보내줘.
+
+수신: shiashia0504@gmail.com
+제목: [${reporterName}] 소요도서관 달빛독서 도전
+
+본문:
+━━━━━━━━━━━━━━━━━━━━
+🔥 달빛 기자단 도전 미션 답변
+━━━━━━━━━━━━━━━━━━━━
+기자 이름: ${reporterName}
+제출 시각: ${now}
+책 제목: 돼지책 (앤서니 브라운)
+
+${answerText}
+━━━━━━━━━━━━━━━━━━━━
+소요도서관 달빛 취재 게임 자동 발송`;
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
+        mcp_servers:[{type:'url',url:'https://gmail.mcp.claude.com/mcp',name:'gmail'}],
+        messages:[{role:'user',content:prompt}]})
+    });
+    if(res.ok){
+      status.textContent='✅ 선생님께 제출됐어요! 수고했어요 🌙';
+      status.style.color='var(--green)';
+      btn.textContent='✅ 제출 완료!';
+      launchConfetti(2);
+    } else throw new Error();
+  }catch{
+    status.textContent='⚠️ 전송 실패. 선생님께 직접 보여주세요!';
+    status.style.color='var(--red)';
+    btn.disabled=false;
+  }
+}
+function showComboPopup(n){
+  const el=document.getElementById('combo-popup');
+  el.textContent=`🔥 ${n}콤보!`;el.style.opacity='1';
+  setTimeout(()=>{el.style.opacity='0';},900);
+}
+
+// ══ Gmail 전송 ══
+async function sendResultEmail(name,sc,lv,rank){
+  const el=document.getElementById('email-status');
+  el.textContent='📨 결과 전송 중...';el.style.color='var(--ink)';
+  const now=new Date().toLocaleString('ko-KR',{timeZone:'Asia/Seoul'});
+  const todayWord = DAY_WORDS[todayDay-1].replace(/✦/g,'').trim();
+  const prompt=`아래 정보로 Gmail을 통해 shiashia0504@gmail.com 으로 이메일을 보내줘.
+
+수신: shiashia0504@gmail.com
+제목: [${name}] 소요도서관 달빛독서 기본
+
+본문:
+━━━━━━━━━━━━━━━━━━━━
+🌙 소요도서관 어린이 기자단 달빛 취재 결과
+━━━━━━━━━━━━━━━━━━━━
+기자 이름: ${name}
+완료 시각: ${now}
+오늘 일차: ${todayDay}일차
+최종 점수: ${sc}점
+남은 목숨: ${'❤️'.repeat(lv)}${'🖤'.repeat(MAX_LIVES-lv)}
+등급: ${rank}
+
+🔐 오늘 획득한 단어: ${todayWord}
+━━━━━━━━━━━━━━━━━━━━
+소요도서관 달빛 취재 게임 자동 발송`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
+        mcp_servers:[{type:'url',url:'https://gmail.mcp.claude.com/mcp',name:'gmail'}],
+        messages:[{role:'user',content:prompt}]})
+    });
+    el.textContent=res.ok?'✅ 선생님께 결과가 전송됐어요!':'⚠️ 전송 실패. 선생님께 직접 알려주세요!';
+    el.style.color=res.ok?'var(--green)':'var(--red)';
+  }catch{
+    el.textContent='⚠️ 전송 실패. 선생님께 직접 알려주세요!';el.style.color='var(--red)';
+  }
+}
+
+// ══ 별 배경 ══
+(function(){
+  const c=document.getElementById('bg'),ctx=c.getContext('2d');
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  const stars=Array.from({length:130},()=>({
+    x:Math.random(),y:Math.random(),r:Math.random()*1.3+.3,
+    a:Math.random(),da:(Math.random()-.5)*.007
+  }));
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    const g=ctx.createRadialGradient(c.width*.82,c.height*.07,15,c.width*.82,c.height*.07,c.height*.75);
+    g.addColorStop(0,'#28200a');g.addColorStop(1,'#080c18');
+    ctx.fillStyle=g;ctx.fillRect(0,0,c.width,c.height);
+    // 달
+    const mx=c.width*.82,my=c.height*.08,mr=Math.min(c.width,c.height)*.065;
+    const mg=ctx.createRadialGradient(mx-mr*.2,my-mr*.2,0,mx,my,mr);
+    mg.addColorStop(0,'#fffde0');mg.addColorStop(.6,'#f7e96a');mg.addColorStop(1,'#c8a820');
+    ctx.beginPath();ctx.arc(mx,my,mr,0,Math.PI*2);ctx.fillStyle=mg;ctx.fill();
+    const hl=ctx.createRadialGradient(mx,my,mr,mx,my,mr*4);
+    hl.addColorStop(0,'#ffe94420');hl.addColorStop(1,'transparent');
+    ctx.beginPath();ctx.arc(mx,my,mr*4,0,Math.PI*2);ctx.fillStyle=hl;ctx.fill();
+    stars.forEach(s=>{
+      s.a+=s.da;if(s.a>1||s.a<0)s.da*=-1;
+      ctx.beginPath();ctx.arc(s.x*c.width,s.y*c.height,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(220,235,255,${s.a})`;ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ══ 폭죽 ══
+function launchConfetti(times=1){
+  const c=document.getElementById('confetti'),ctx=c.getContext('2d');
+  c.width=window.innerWidth;c.height=window.innerHeight;
+  const colors=['#f7e96a','#4d9fff','#4ade80','#ff5a5a','#a78bfa','#fb923c'];
+  const p=Array.from({length:55*times},()=>({
+    x:Math.random()*c.width,y:-10,r:Math.random()*5+2,
+    c:colors[Math.floor(Math.random()*colors.length)],
+    vx:(Math.random()-.5)*5,vy:Math.random()*4+2,
+    a:1,rot:Math.random()*Math.PI*2,rv:(Math.random()-.5)*.2
+  }));
+  let fr;
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);let alive=false;
+    p.forEach(q=>{
+      if(q.a<=0)return;alive=true;
+      ctx.save();ctx.globalAlpha=q.a;ctx.fillStyle=q.c;
+      ctx.translate(q.x,q.y);ctx.rotate(q.rot);
+      ctx.fillRect(-q.r/2,-q.r/2,q.r,q.r*2);ctx.restore();
+      q.x+=q.vx;q.y+=q.vy;q.vy+=.09;q.rot+=q.rv;
+      if(q.y>c.height*.65)q.a-=.03;
+    });
+    if(alive)fr=requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,c.width,c.height);
+  }
+  cancelAnimationFrame(fr);draw();
+}
+</script>
+</body>
+</html>
