@@ -961,7 +961,7 @@ async function submitChallenge(){
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         subject:`[${reporterName}] 소요도서관 달빛독서 도전`,
-        body:`━━━━━━━━━━━━━━━━━━━━\n🔥 달빛 기자단 도전 미션 답변\n━━━━━━━━━━━━━━━━━━━━\n기자 이름: ${reporterName}\n제출 시각: ${now}\n책 제목: 돼지책 (앤서니 브라운)\n\n${answerText}\n━━━━━━━━━━━━━━━━━━━━\n소요도서관 달빛 취재 게임 자동 발송`
+        body:`====================\n[달빛 기자단 도전 미션 답변]\n====================\n기자 이름: ${reporterName}\n제출 시각: ${now}\n책 제목: 돼지책 (앤서니 브라운)\n\n${answerText}\n====================\n소요도서관 달빛 취재 게임 자동 발송`
       })
     });
     status.textContent='✅ 선생님께 제출됐어요! 수고했어요 🌙';
@@ -992,7 +992,7 @@ async function sendResultEmail(name,sc,lv,rank){
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         subject:`[${name}] 소요도서관 달빛독서 기본`,
-        body:`━━━━━━━━━━━━━━━━━━━━\n🌙 소요도서관 어린이 기자단 달빛 취재 결과\n━━━━━━━━━━━━━━━━━━━━\n기자 이름: ${name}\n완료 시각: ${now}\n오늘 일차: ${todayDay}일차\n최종 점수: ${sc}점\n남은 목숨: ${'❤️'.repeat(lv)}${'🖤'.repeat(MAX_LIVES-lv)}\n등급: ${rank}\n\n🔐 오늘 획득한 단어: ${todayWord}\n━━━━━━━━━━━━━━━━━━━━\n소요도서관 달빛 취재 게임 자동 발송`
+        body:`====================\n[소요도서관 어린이 기자단 달빛 취재 결과]\n====================\n기자 이름: ${name}\n완료 시각: ${now}\n오늘 일차: ${todayDay}일차\n최종 점수: ${sc}점\n남은 목숨: ${lv}개 남음\n등급: ${rank.replace(/[^\w\s가-힣]/g,'').trim()}\n\n오늘 획득한 단어: ${todayWord}\n====================\n소요도서관 달빛 취재 게임 자동 발송`
       })
     });
     el.textContent='✅ 선생님께 결과가 전송됐어요!';
