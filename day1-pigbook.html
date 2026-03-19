@@ -240,6 +240,7 @@ body{
 .today-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#3d2b1a,#5a3e25);border:2px solid #c8a060;border-radius:8px;padding:5px 12px;margin-top:10px;font-family:'Jua',sans-serif;font-size:12px;color:#f0d090;box-shadow:0 2px 8px #00000055;animation:fadeUp .4s ease both;width:100%;justify-content:center;text-shadow:0 1px 2px #00000066}
 
 @keyframes fadeDown{from{opacity:0;transform:translateY(-13px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 @media(max-width:380px){.card{padding:16px 13px}.map-dot{width:36px;height:36px;font-size:14px}.map-label{font-size:9px}}
@@ -304,7 +305,7 @@ body{
 
   <div class="card" style="width:100%;max-width:640px">
     <!-- 기자증 (컴팩트) -->
-    <div class="press-id show" style="margin-bottom:12px">
+    <div class="press-id show" style="margin-bottom:14px">
       <div class="pid-header">
         <span class="pid-logo">🌙</span>
         <div class="pid-org">소요도서관 어린이 기자단</div>
@@ -318,6 +319,22 @@ body{
         </div>
       </div>
       <div class="pid-num">SOYO-2025</div>
+    </div>
+
+    <!-- 🚨 긴급 속보 브리핑 -->
+    <div style="background:linear-gradient(135deg,#1a0808,#2a0a0a);border:2px solid var(--red);border-radius:12px;padding:16px;margin-bottom:14px;position:relative;overflow:hidden">
+      <!-- 깜빡이는 속보 배지 -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <div style="background:var(--red);color:#fff;font-family:'Jua',sans-serif;font-size:11px;padding:3px 10px;border-radius:4px;letter-spacing:2px;animation:blink 1s ease-in-out infinite">🚨 긴급 속보</div>
+        <div style="font-size:11px;color:#ff9999;letter-spacing:1px">DAY 1 — 사건 발생</div>
+      </div>
+      <div style="font-family:'Jua',sans-serif;font-size:17px;color:#fff;margin-bottom:10px;line-height:1.5">피곳 가족 집에서<br>엄마가 사라졌습니다!</div>
+      <div style="font-size:13px;color:#ffaaaa;line-height:1.8">
+        오늘 아침, 피곳 가족 집에서<br>
+        엄마가 흔적도 없이 사라졌습니다.<br>
+        <strong style="color:#fff">달빛 기자단</strong>은 현장을 조사하고<br>
+        단서 5개를 수집해야 합니다!
+      </div>
     </div>
 
     <!-- 취재 지도 -->
@@ -334,7 +351,7 @@ body{
       <div id="today-region-badge"></div>
     </div>
 
-    <!-- 규칙 (한 줄 요약) -->
+    <!-- 규칙 -->
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
       <span style="background:#ff5a5a22;border:1px solid #ff5a5a44;border-radius:8px;padding:4px 10px;font-size:12px;color:var(--red)">❤️ 목숨 3개</span>
       <span style="background:#ffe94422;border:1px solid #ffe94444;border-radius:8px;padding:4px 10px;font-size:12px;color:var(--moon)">⭐ 첫 정답 +50</span>
@@ -342,7 +359,9 @@ body{
       <span style="background:#4ade8022;border:1px solid #4ade8044;border-radius:8px;padding:4px 10px;font-size:12px;color:var(--green)">🔐 비밀 단어</span>
     </div>
 
-    <button class="start-btn" onclick="startGame()">📸 취재 출발!</button>
+    <button class="start-btn" onclick="startGame()" style="background:linear-gradient(135deg,#3a0a0a,var(--red));box-shadow:0 4px 20px #ff5a5a44">
+      🔍 현장 조사 시작!
+    </button>
   </div>
 </div>
 
@@ -356,7 +375,7 @@ body{
 <!-- 퀴즈 -->
 <div id="layer-quiz" class="layer hidden">
   <div class="hud">
-    <div class="hud-org">🌙 소요도서관 달빛취재</div>
+    <div class="hud-org">🚨 피곳 가족 집 — 현장 조사 중</div>
     <div class="hud-lives" id="hud-lives"></div>
   </div>
   <div class="score-bar">
@@ -392,25 +411,37 @@ body{
 <div id="layer-complete" class="layer hidden">
   <div class="page-title">
     <div class="badge">🌙 소요도서관 어린이 기자단</div>
-    <h1>특종 완성!</h1>
+    <h1>사건 파일 완성!</h1>
   </div>
   <div class="card">
-    <div style="font-size:68px;text-align:center;margin-bottom:9px;animation:float 2.5s ease-in-out infinite">🏆</div>
+    <div style="font-size:68px;text-align:center;margin-bottom:9px;animation:float 2.5s ease-in-out infinite">🗂️</div>
     <div style="font-family:'Jua',sans-serif;font-size:19px;color:var(--moon);text-align:center;margin-bottom:4px" id="complete-name"></div>
-    <p style="text-align:center;color:var(--ink);font-size:13px;margin-bottom:16px;line-height:1.7">끈질긴 취재로 모든 사건을 밝혔어요!</p>
+    <p style="text-align:center;color:var(--ink);font-size:13px;margin-bottom:16px;line-height:1.7">단서 5개를 모두 수집했어요!<br>피곳 가족 사건 파일이 완성됐습니다.</p>
     <div style="background:var(--card2);border:1px solid var(--border);border-radius:13px;padding:18px;text-align:center;margin-bottom:12px">
-      <div style="font-size:12px;color:var(--ink);margin-bottom:4px">🌙 최종 취재 점수</div>
+      <div style="font-size:12px;color:var(--ink);margin-bottom:4px">🔍 단서 수집 점수</div>
       <div class="final-score" id="final-score-val">0</div>
       <div style="font-size:13px;color:var(--ink);margin-top:5px" id="final-sub"></div>
     </div>
-    <div style="text-align:center;margin-bottom:14px"><div class="rank-badge" id="rank-badge"></div></div>
-    <!-- 5일 단어 수집 진행 -->
-    <div style="background:linear-gradient(135deg,#0e1e0a,#1a2e10);border:2px solid var(--moon);border-radius:14px;padding:16px;margin-bottom:14px">
+    <div style="text-align:center;margin-bottom:12px"><div class="rank-badge" id="rank-badge"></div></div>
+
+    <!-- 5일 단어 수집 -->
+    <div style="background:linear-gradient(135deg,#0e1e0a,#1a2e10);border:2px solid var(--moon);border-radius:14px;padding:16px;margin-bottom:12px">
       <div style="font-size:12px;color:var(--ink);text-align:center;margin-bottom:10px;letter-spacing:1px">🔐 비밀 문장 수집 현황</div>
       <div id="final-code-area"></div>
     </div>
+
+    <!-- 내일 예고 -->
+    <div style="background:linear-gradient(135deg,#0a0a1a,#1a1a2e);border:2px solid #4444aa;border-radius:12px;padding:14px;margin-bottom:14px;text-align:center">
+      <div style="font-size:11px;color:#8888cc;letter-spacing:2px;margin-bottom:6px">📺 내일의 취재 예고</div>
+      <div style="font-family:'Jua',sans-serif;font-size:15px;color:#aaaaff;line-height:1.6">
+        마을 사람들이 수상한 것을 목격했다?!<br>
+        <span style="color:#ffffff">내일은 마을로 가서 목격자를 찾아봐요!</span>
+      </div>
+      <div style="font-size:20px;margin-top:8px">🧑‍🤝‍🧑</div>
+    </div>
+
     <div id="email-status"></div>
-    <button class="retry-btn" onclick="retryGame()">🔄 다시 취재하기</button>
+    <button class="retry-btn" onclick="retryGame()">🔄 다시 조사하기</button>
   </div><!-- card 끝 -->
 
   <!-- 도전 미션 — 카드 밖에 위치 -->
@@ -464,35 +495,35 @@ function getTodayChars(){
 }
 
 const STAGES=[
-  {icon:'🐷',label:'현장1: 가족을 찾아라!',mission:'가족이 몇 명인지 파악하라!',
-   question:'돼지책에 나오는 가족은 모두 몇 명인가요?',
+  {icon:'🔍',label:'단서 #1 — 용의자 파악',mission:'피곳 가족 집을 조사하라!',
+   question:'피곳 가족은 모두 몇 명인가요?',
    hint:'💡 엄마, 아빠, 그리고 아이들을 세어봐요!',
    choices:['2명','3명','4명','5명'],answer:2,
-   ok:'🎉 정답! 엄마, 아빠, 아들 둘 해서 4명이에요!',ok_desc:'가족 명단 확보! 첫 번째 증거 수집!',
+   ok:'🎉 정답! 엄마, 아빠, 아들 둘 해서 4명이에요!',ok_desc:'단서 #1 확보! 용의자 명단 작성 완료!',
    ng:'아쉬워요! 정답은 4명이에요.',ng_desc:'엄마, 아빠, 아들이 몇 명인지 다시 세어봐요.'},
-  {icon:'🍳',label:'현장2: 엄마의 하루',mission:'엄마가 한 일을 확인하라!',
-   question:'엄마가 집에서 하는 일이 아닌 것은 무엇인가요?',
+  {icon:'🕵️',label:'단서 #2 — 행적 조사',mission:'엄마의 흔적을 찾아라!',
+   question:'엄마가 집에서 하는 일이 아닌 것은?',
    hint:'💡 엄마가 매일 바쁘게 하는 일들을 떠올려봐요!',
    choices:['밥하기','청소하기','빨래하기','축구하기'],answer:3,
-   ok:'⚽ 맞아요! 엄마는 축구는 안 했어요!',ok_desc:'엄마의 하루 일과 확인 완료!',
+   ok:'⚽ 맞아요! 엄마는 축구는 안 했어요!',ok_desc:'단서 #2 확보! 엄마 행적 파악 완료!',
    ng:'아쉬워요! 정답은 축구하기예요.',ng_desc:'엄마가 집에서 한 일을 다시 생각해봐요.'},
-  {icon:'🏠',label:'현장3: 사건 현장',mission:'엄마가 사라진 뒤를 조사하라!',
-   question:'엄마가 없어지자 집이 어떻게 됐나요?',
+  {icon:'🏚️',label:'단서 #3 — 현장 감식',mission:'엄마가 사라진 뒤를 조사하라!',
+   question:'엄마가 사라지자 집이 어떻게 됐나요?',
    hint:'💡 아빠와 아이들만 남은 집은 어떤 모습이었을까요?',
    choices:['더러워졌다','깨끗해졌다','불이 났다','파티를 했다'],answer:0,
-   ok:'🏠 정확해요! 집이 엉망이 됐어요!',ok_desc:'사건 현장 사진 확보!',
-   ng:'아쉬워요! 정답은 더러워졌다예요.',ng_desc:'엄마 없이 아빠와 아이들만 있는 집을 떠올려봐요.'},
-  {icon:'🐽',label:'현장4: 돼지의 비밀',mission:'돼지로 변한 이유를 밝혀라!',
-   question:'아빠와 아이들이 돼지처럼 변한 건 왜일까요?',
+   ok:'🏚️ 정확해요! 집이 엉망진창이 됐어요!',ok_desc:'단서 #3 확보! 현장 사진 촬영 완료!',
+   ng:'아쉬워요! 정답은 더러워졌다예요.',ng_desc:'엄마 없이 남겨진 집을 떠올려봐요.'},
+  {icon:'🐷',label:'단서 #4 — 변화의 증거',mission:'수상한 변화를 포착하라!',
+   question:'아빠와 아이들이 돼지처럼 변한 이유는?',
    hint:'💡 아빠와 아이들은 집에서 어떻게 지냈나요?',
    choices:['마법에 걸려서','게으르고 이기적이어서','배가 고파서','아파서'],answer:1,
-   ok:'🐷 정답! 게으르고 이기적인 모습이 돼지 같았던 거예요!',ok_desc:'핵심 단서 발견!',
+   ok:'🐷 정답! 게으르고 이기적인 모습이 돼지 같았어요!',ok_desc:'단서 #4 확보! 핵심 단서 발견!',
    ng:'아쉬워요! 정답은 게으르고 이기적이어서예요.',ng_desc:'아빠와 아이들의 행동을 생각해봐요.'},
-  {icon:'📰',label:'현장5: 특종 완성',mission:'가족의 변화를 기사로 써라!',
+  {icon:'📋',label:'단서 #5 — 사건 종결',mission:'사건의 결말을 밝혀라!',
    question:'엄마가 돌아온 뒤 가족이 함께 한 일은?',
    hint:'💡 달라진 가족의 모습을 떠올려봐요!',
    choices:['요리만 했다','청소만 했다','자동차만 고쳤다','집안일을 모두 함께 했다'],answer:3,
-   ok:'🏆 완벽해요! 가족 모두가 함께 도왔어요!',ok_desc:'달빛 기자단의 취재 성공! 🌙',
+   ok:'📋 완벽해요! 가족 모두가 함께 변했어요!',ok_desc:'단서 #5 확보! 사건 파일 완성!',
    ng:'아쉬워요! 정답은 집안일을 모두 함께 했다예요.',ng_desc:'엄마가 돌아온 뒤 달라진 가족을 떠올려봐요.'},
 ];
 
@@ -516,10 +547,10 @@ function showLayer(id){
 // ══ 취재 지역 데이터 ★ 책 정해지면 이름/아이콘 교체! ══
 const REGIONS = [
   { day:1, icon:'🐷', name:'피곳\n가족 집',   desc:'1일차 취재지' },
-  { day:2, icon:'🍳', name:'엄마의\n부엌',     desc:'2일차 취재지' },
-  { day:3, icon:'🏠', name:'사건\n현장',       desc:'3일차 취재지' },
-  { day:4, icon:'🐽', name:'돼지의\n비밀',     desc:'4일차 취재지' },
-  { day:5, icon:'📰', name:'달빛\n신문사',     desc:'5일차 취재지' },
+  { day:2, icon:'🌾', name:'돌쇠네\n마을',    desc:'2일차 취재지' },
+  { day:3, icon:'🩲', name:'재스퍼의\n언덕',  desc:'3일차 취재지' },
+  { day:4, icon:'🐾', name:'비밀\n거래 현장', desc:'4일차 취재지' },
+  { day:5, icon:'🎰', name:'엄마\n자판기',    desc:'5일차 취재지' },
 ];
 
 // ══ 도전 문제 (서술형 — 고학년용) ══
@@ -800,7 +831,7 @@ function checkAnswer(idx,btn){
     // 🔓 코드 조각 잠금 해제!
     setTimeout(()=>unlockCode(currentStage), 400);
     const isLast=currentStage===STAGES.length-1;
-    next.textContent=isLast?'🏆 특종 기사 완성!':'다음 취재 현장으로 →';
+    next.textContent=isLast?'🗂️ 사건 파일 완성!':'다음 단서 찾으러 가기 →';
     next.className='next-btn show';
   } else {
     btn.classList.add('wrong');btn.disabled=true;
@@ -827,7 +858,7 @@ function checkAnswer(idx,btn){
       document.getElementById('fb-t').textContent=s.ng;
       document.getElementById('fb-d').textContent=s.ng_desc;
       const isLast=currentStage===STAGES.length-1;
-      next.textContent=isLast?'🏆 특종 기사 완성!':'다음 취재 현장으로 →';
+      next.textContent=isLast?'🗂️ 사건 파일 완성!':'다음 단서 찾으러 가기 →';
       next.className='next-btn show';
     }
   }
