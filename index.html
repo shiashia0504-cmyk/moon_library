@@ -2,10 +2,188 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="refresh" content="0; url=./day5-vendingmachine.html">
-<title>달빛독서 🌙 소요도서관</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>달빛 방탈출 🌙 소요도서관</title>
+<script>
+// ★★★ 선생님이 매일 바꾸는 곳 ★★★
+const CONFIG = {
+  gameFile:  'day1-pigbook.html',   // 오늘 게임 파일명
+  zoomLink:  '',                     // 오늘 ZOOM 링크 (없으면 '')
+  today:     1,                      // 오늘 일차 (1~5)
+  todayDate: '9월 28일 (일)',        // 화면에 표시할 날짜
+  isActive:  true,                   // 행사 종료 후 false로
+};
+// ★★★★★★★★★★★★★★★★★
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:'Apple SD Gothic Neo','맑은 고딕',sans-serif}
+body{
+  background:#050410;color:#e8e0ff;
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:24px 16px;position:relative;overflow:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse at 30% 30%,#1a0a3a33 0%,transparent 60%),
+    radial-gradient(ellipse at 70% 70%,#0a1a3a33 0%,transparent 60%);
+  pointer-events:none;
+}
+.star{position:fixed;border-radius:50%;background:#fff;animation:twinkle 3s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.15}50%{opacity:.9}}
+.container{width:100%;max-width:400px;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:14px}
+.org-badge{font-size:11px;letter-spacing:2px;color:#9080c8;border:1px solid #3a2a6a;padding:4px 14px;border-radius:20px;background:#080618}
+.moon{font-size:54px;line-height:1;animation:moonFloat 4s ease-in-out infinite}
+@keyframes moonFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.title{font-size:34px;font-weight:900;color:#fff;text-shadow:0 0 30px #a060ff66;letter-spacing:-1px;text-align:center}
+.subtitle{font-size:13px;color:#6858a0;text-align:center}
+
+/* 오늘 카드 */
+.today-card{width:100%;background:linear-gradient(135deg,#0c0820,#14103a);border:1.5px solid #3a2a6a;border-radius:16px;padding:16px 18px;text-align:center}
+.today-label{font-size:9px;color:#5848a0;letter-spacing:3px;margin-bottom:6px}
+.today-day{font-size:20px;font-weight:900;color:#f7e96a;margin-bottom:3px}
+.today-date{font-size:12px;color:#7868a8;margin-bottom:10px}
+.day-dots{display:flex;justify-content:center;gap:5px;flex-wrap:wrap}
+.dot{font-size:10px;padding:3px 7px;border-radius:10px;background:#0e0a28;border:1px solid #2a1a4a;color:#504880}
+.dot.active{background:#1e1040;border-color:#f7e96a;color:#f7e96a;font-weight:700}
+.dot.done{background:#102010;border-color:#4ade80;color:#4ade80}
+
+/* 버튼 */
+.btn{width:100%;padding:18px 20px;border:none;border-radius:16px;color:#fff;font-size:16px;font-weight:900;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px;text-decoration:none}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+.btn-game{background:linear-gradient(135deg,#3b0764,#7e22ce,#a855f7);box-shadow:0 6px 28px #a855f744}
+.btn-game:hover{box-shadow:0 10px 36px #a855f766}
+.btn-zoom{background:linear-gradient(135deg,#1e3a80,#1d4ed8,#3b82f6);box-shadow:0 6px 28px #3b82f633}
+.btn-zoom:hover{box-shadow:0 10px 36px #3b82f655}
+.btn-zoom.off{background:linear-gradient(135deg,#151525,#1e1e38);box-shadow:none;opacity:.5;cursor:default}
+.btn-zoom.off:hover{transform:none}
+.btn-icon{font-size:26px;flex-shrink:0}
+.btn-body{display:flex;flex-direction:column;align-items:flex-start}
+.btn-main{font-size:17px;font-weight:900;line-height:1.2}
+.btn-sub{font-size:10px;opacity:.72;font-weight:400;margin-top:2px}
+
+/* 비밀 문장 */
+.secret-card{width:100%;background:linear-gradient(135deg,#080c18,#0c1220);border:1.5px solid #f7e96a33;border-radius:16px;padding:14px 16px}
+.secret-label{font-size:9px;color:#f7e96a88;letter-spacing:2px;text-align:center;margin-bottom:10px}
+.secret-slots{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;align-items:center}
+.slot{width:28px;height:32px;background:#08060e;border:1.5px solid #201840;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#1a1030;transition:all .4s}
+.slot.on{border-color:#f7e96a;color:#f7e96a;background:#120e00;box-shadow:0 0 8px #f7e96a33}
+.slot-gap{width:5px;height:10px;background:transparent}
+
+.footer{font-size:11px;color:#302850;text-align:center;line-height:1.6}
+.ended{text-align:center;padding:24px 20px;background:#0c0820;border-radius:16px;border:1.5px solid #3a2a6a}
+</style>
 </head>
 <body>
-<script>window.location.href='./day5-vendingmachine.html';</script>
+<div class="star" style="width:2px;height:2px;top:8%;left:12%;animation-delay:0s"></div>
+<div class="star" style="width:1px;height:1px;top:18%;left:82%;animation-delay:.6s"></div>
+<div class="star" style="width:2px;height:2px;top:32%;left:6%;animation-delay:1.1s"></div>
+<div class="star" style="width:1px;height:1px;top:55%;left:92%;animation-delay:1.7s"></div>
+<div class="star" style="width:2px;height:2px;top:72%;left:22%;animation-delay:.9s"></div>
+<div class="star" style="width:1px;height:1px;top:14%;left:58%;animation-delay:2.1s"></div>
+<div class="star" style="width:2px;height:2px;top:82%;left:72%;animation-delay:.4s"></div>
+<div class="star" style="width:1px;height:1px;top:62%;left:40%;animation-delay:1.9s"></div>
+<div class="star" style="width:2px;height:2px;top:25%;left:35%;animation-delay:.2s"></div>
+<div class="star" style="width:1px;height:1px;top:88%;left:55%;animation-delay:1.3s"></div>
+
+<div class="container" id="app"></div>
+
+<script>
+const DAYS = [
+  {icon:'🐷', book:'돼지책',       file:'day1-pigbook.html'},
+  {icon:'💩', book:'똥벼락',       file:'day2-village.html'},
+  {icon:'🩲', book:'오싹오싹 팬티', file:'day3-pantie.html'},
+  {icon:'🐉', book:'반려용 팝니다', file:'day4-dragon.html'},
+  {icon:'🎰', book:'엄마자판기',   file:'day5-vendingmachine.html'},
+];
+const WORD_LENS = [6, 4, 5, 4, 4]; // 사랑스러운 자질들은 자연스럽게 드러나는 법이다
+
+function render(){
+  const {gameFile, zoomLink, today, todayDate, isActive} = CONFIG;
+  const app = document.getElementById('app');
+  const d = DAYS[today-1];
+
+  if(!isActive){
+    app.innerHTML = `
+      <div class="org-badge">🌙 소요도서관 어린이 기자단</div>
+      <div class="moon">🌙</div>
+      <div class="title">달빛 방탈출</div>
+      <div class="ended">
+        <div style="font-size:40px;margin-bottom:10px">🎉</div>
+        <div style="font-size:17px;font-weight:900;color:#f7e96a;margin-bottom:8px">5일 완주 축하해요!</div>
+        <div style="font-size:13px;color:#6858a8;line-height:1.7">함께해줘서 고마워요 🌙<br>비밀 문장을 모두 모았나요?</div>
+      </div>
+      <div class="footer">소요도서관 어린이 기자단 · 2025</div>`;
+    return;
+  }
+
+  // 일차 도트
+  const dots = DAYS.map((day,i) =>
+    `<div class="dot ${i+1<today?'done':i+1===today?'active':''}">${day.icon} DAY${i+1}</div>`
+  ).join('');
+
+  // 비밀 문장 슬롯
+  const slots = WORD_LENS.map((len,wi) => {
+    const chars = Array(len).fill(0).map((_,ci) =>
+      `<div class="slot ${wi+1<today?'on':''}"></div>`
+    ).join('');
+    return chars + (wi<4 ? '<div class="slot-gap"></div>' : '');
+  }).join('');
+
+  // 줌 버튼
+  const zoomBtn = zoomLink
+    ? `<a href="${zoomLink}" target="_blank" class="btn btn-zoom">
+        <span class="btn-icon">📹</span>
+        <div class="btn-body">
+          <div class="btn-main">ZOOM 입장하기</div>
+          <div class="btn-sub">선생님과 함께 실시간 참여!</div>
+        </div>
+      </a>`
+    : `<div class="btn btn-zoom off">
+        <span class="btn-icon">📹</span>
+        <div class="btn-body">
+          <div class="btn-main">ZOOM 링크 준비 중</div>
+          <div class="btn-sub">행사 시작 전 업데이트 예정</div>
+        </div>
+      </div>`;
+
+  app.innerHTML = `
+    <div class="org-badge">🌙 소요도서관 어린이 기자단</div>
+    <div class="moon">${d.icon}</div>
+    <div class="title">달빛 방탈출</div>
+    <div class="subtitle">5일간의 비밀 문장을 완성하라!</div>
+
+    <div class="today-card">
+      <div class="today-label">TODAY</div>
+      <div class="today-day">DAY ${today} · ${todayDate}</div>
+      <div class="today-date">오늘의 책: ${d.icon} ${d.book}</div>
+      <div class="day-dots">${dots}</div>
+    </div>
+
+    <a href="${gameFile}" class="btn btn-game">
+      <span class="btn-icon">🎮</span>
+      <div class="btn-body">
+        <div class="btn-main">오늘의 게임 시작!</div>
+        <div class="btn-sub">방탈출 게임으로 비밀 단어를 획득하세요</div>
+      </div>
+    </a>
+
+    ${zoomBtn}
+
+    <div class="secret-card">
+      <div class="secret-label">🔐 비밀 문장 수집 현황</div>
+      <div class="secret-slots">${slots}</div>
+    </div>
+
+    <div class="footer">
+      저녁 7:30 ~ 8:00 · ZOOM 실시간<br>
+      소요도서관 어린이 기자단 · 2025
+    </div>`;
+}
+render();
+</script>
 </body>
 </html>
