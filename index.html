@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>달빛 방탈출 🌙 소요도서관</title>
+<title>소요도서관 사건: 달빛 마법이 풀리기 전에 🌙</title>
 <script>
 // ★★★ 선생님이 매일 바꾸는 곳 ★★★
 const CONFIG = {
@@ -39,6 +39,7 @@ body::before{
 @keyframes moonFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .title{font-size:34px;font-weight:900;color:#fff;text-shadow:0 0 30px #a060ff66;letter-spacing:-1px;text-align:center}
 .subtitle{font-size:13px;color:#6858a0;text-align:center}
+.title2{font-size:15px;font-weight:700;color:#b0a8e0;text-align:center;margin-top:-6px;letter-spacing:-0.3px}
 
 /* 오늘 카드 */
 .today-card{width:100%;background:linear-gradient(135deg,#0c0820,#14103a);border:1.5px solid #3a2a6a;border-radius:16px;padding:16px 18px;text-align:center}
@@ -110,7 +111,7 @@ function render(){
     app.innerHTML = `
       <div class="org-badge">🌙 소요도서관 어린이 기자단</div>
       <div class="moon">🌙</div>
-      <div class="title">달빛 방탈출</div>
+      <div class="title">소요도서관 사건</div><div class="title2">달빛 마법이 풀리기 전에</div>
       <div class="ended">
         <div style="font-size:40px;margin-bottom:10px">🎉</div>
         <div style="font-size:17px;font-weight:900;color:#f7e96a;margin-bottom:8px">5일 완주 축하해요!</div>
@@ -124,12 +125,6 @@ function render(){
   const dots = DAYS.map((day,i) =>
     `<div class="dot ${i+1<today?'done':i+1===today?'active':''}">${day.icon} DAY${i+1}</div>`
   ).join('');
-
-  // 비밀 문장 슬롯
-  const slots = WORD_LENS.map((len,wi) => {
-    const chars = Array(len).fill(0).map((_,ci) =>
-      `<div class="slot ${wi+1<today?'on':''}"></div>`
-    ).join('');
     return chars + (wi<4 ? '<div class="slot-gap"></div>' : '');
   }).join('');
 
@@ -153,7 +148,7 @@ function render(){
   app.innerHTML = `
     <div class="org-badge">🌙 소요도서관 어린이 기자단</div>
     <div class="moon">${d.icon}</div>
-    <div class="title">달빛 방탈출</div>
+    <div class="title">소요도서관 사건</div><div class="title2">달빛 마법이 풀리기 전에</div>
     <div class="subtitle">5일간의 비밀 문장을 완성하라!</div>
 
     <div class="today-card">
@@ -172,16 +167,10 @@ function render(){
     </a>
 
     ${zoomBtn}
-
-    <div class="secret-card">
-      <div class="secret-label">🔐 비밀 문장 수집 현황</div>
       <div class="secret-slots">${slots}</div>
     </div>
 
     <div class="footer">
-      저녁 7:30 ~ 8:00 · ZOOM 실시간<br>
-      소요도서관 어린이 기자단 · 2025
-    </div>`;
 }
 render();
 </script>
