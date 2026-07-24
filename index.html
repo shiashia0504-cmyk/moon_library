@@ -33,15 +33,16 @@ body::before{
 }
 .star{position:fixed;border-radius:50%;background:#fff;animation:twinkle 3s ease-in-out infinite}
 @keyframes twinkle{0%,100%{opacity:.15}50%{opacity:.9}}
+
 .container{width:100%;max-width:400px;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:14px}
 .org-badge{font-size:11px;letter-spacing:2px;color:#9080c8;border:1px solid #3a2a6a;padding:4px 14px;border-radius:20px;background:#080618}
 .moon{font-size:54px;line-height:1;animation:moonFloat 4s ease-in-out infinite}
 @keyframes moonFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.title{font-size:34px;font-weight:900;color:#fff;text-shadow:0 0 30px #a060ff66;letter-spacing:-1px;text-align:center}
-.subtitle{font-size:13px;color:#6858a0;text-align:center}
-.title2{font-size:15px;font-weight:700;color:#b0a8e0;text-align:center;margin-top:-6px;letter-spacing:-0.3px}
 
-/* 오늘 카드 */
+.title{font-size:30px;font-weight:900;color:#fff;text-shadow:0 0 30px #a060ff66;letter-spacing:-1px;text-align:center;line-height:1.2}
+.title2{font-size:15px;font-weight:700;color:#b0a8e0;text-align:center;margin-top:-4px;letter-spacing:-0.3px}
+.subtitle{font-size:13px;color:#6858a0;text-align:center}
+
 .today-card{width:100%;background:linear-gradient(135deg,#0c0820,#14103a);border:1.5px solid #3a2a6a;border-radius:16px;padding:16px 18px;text-align:center}
 .today-label{font-size:9px;color:#5848a0;letter-spacing:3px;margin-bottom:6px}
 .today-day{font-size:20px;font-weight:900;color:#f7e96a;margin-bottom:3px}
@@ -51,7 +52,6 @@ body::before{
 .dot.active{background:#1e1040;border-color:#f7e96a;color:#f7e96a;font-weight:700}
 .dot.done{background:#102010;border-color:#4ade80;color:#4ade80}
 
-/* 버튼 */
 .btn{width:100%;padding:18px 20px;border:none;border-radius:16px;color:#fff;font-size:16px;font-weight:900;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px;text-decoration:none}
 .btn:hover{transform:translateY(-2px)}
 .btn:active{transform:translateY(0)}
@@ -65,14 +65,6 @@ body::before{
 .btn-body{display:flex;flex-direction:column;align-items:flex-start}
 .btn-main{font-size:17px;font-weight:900;line-height:1.2}
 .btn-sub{font-size:10px;opacity:.72;font-weight:400;margin-top:2px}
-
-/* 비밀 문장 */
-.secret-card{width:100%;background:linear-gradient(135deg,#080c18,#0c1220);border:1.5px solid #f7e96a33;border-radius:16px;padding:14px 16px}
-.secret-label{font-size:9px;color:#f7e96a88;letter-spacing:2px;text-align:center;margin-bottom:10px}
-.secret-slots{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;align-items:center}
-.slot{width:28px;height:32px;background:#08060e;border:1.5px solid #201840;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#1a1030;transition:all .4s}
-.slot.on{border-color:#f7e96a;color:#f7e96a;background:#120e00;box-shadow:0 0 8px #f7e96a33}
-.slot-gap{width:5px;height:10px;background:transparent}
 
 .footer{font-size:11px;color:#302850;text-align:center;line-height:1.6}
 .ended{text-align:center;padding:24px 20px;background:#0c0820;border-radius:16px;border:1.5px solid #3a2a6a}
@@ -94,13 +86,12 @@ body::before{
 
 <script>
 const DAYS = [
-  {icon:'🐷', book:'돼지책',       file:'day1-pigbook.html'},
-  {icon:'💩', book:'똥벼락',       file:'day2-village.html'},
-  {icon:'🩲', book:'오싹오싹 팬티', file:'day3-pantie.html'},
-  {icon:'🐉', book:'반려용 팝니다', file:'day4-dragon.html'},
-  {icon:'🎰', book:'엄마자판기',   file:'day5-vendingmachine.html'},
+  {icon:'🐷', book:'돼지책'},
+  {icon:'💩', book:'똥벼락'},
+  {icon:'🩲', book:'오싹오싹 팬티'},
+  {icon:'🐉', book:'반려용 팝니다'},
+  {icon:'🎰', book:'엄마자판기'},
 ];
-const WORD_LENS = [6, 4, 5, 4, 4]; // 사랑스러운 자질들은 자연스럽게 드러나는 법이다
 
 function render(){
   const {gameFile, zoomLink, today, todayDate, isActive} = CONFIG;
@@ -111,7 +102,8 @@ function render(){
     app.innerHTML = `
       <div class="org-badge">🌙 소요도서관 어린이 기자단</div>
       <div class="moon">🌙</div>
-      <div class="title">소요도서관 사건</div><div class="title2">달빛 마법이 풀리기 전에</div>
+      <div class="title">소요도서관 사건</div>
+      <div class="title2">달빛 마법이 풀리기 전에</div>
       <div class="ended">
         <div style="font-size:40px;margin-bottom:10px">🎉</div>
         <div style="font-size:17px;font-weight:900;color:#f7e96a;margin-bottom:8px">5일 완주 축하해요!</div>
@@ -125,8 +117,6 @@ function render(){
   const dots = DAYS.map((day,i) =>
     `<div class="dot ${i+1<today?'done':i+1===today?'active':''}">${day.icon} DAY${i+1}</div>`
   ).join('');
-    return chars + (wi<4 ? '<div class="slot-gap"></div>' : '');
-  }).join('');
 
   // 줌 버튼
   const zoomBtn = zoomLink
@@ -148,7 +138,8 @@ function render(){
   app.innerHTML = `
     <div class="org-badge">🌙 소요도서관 어린이 기자단</div>
     <div class="moon">${d.icon}</div>
-    <div class="title">소요도서관 사건</div><div class="title2">달빛 마법이 풀리기 전에</div>
+    <div class="title">소요도서관 사건</div>
+    <div class="title2">달빛 마법이 풀리기 전에</div>
     <div class="subtitle">5일간의 비밀 문장을 완성하라!</div>
 
     <div class="today-card">
@@ -167,11 +158,13 @@ function render(){
     </a>
 
     ${zoomBtn}
-      <div class="secret-slots">${slots}</div>
-    </div>
 
     <div class="footer">
+      저녁 7:30 ~ 8:00 · ZOOM 실시간<br>
+      소요도서관 어린이 기자단 · 2025
+    </div>`;
 }
+
 render();
 </script>
 </body>
