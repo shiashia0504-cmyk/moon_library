@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>달빛 방탈출 3일차 🩲 소요도서관</title>
+<title>소요도서관 사건: 달빛 마법이 풀리기 전에 · 3일차 🌙</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic:wght@400;700;800&display=swap" media="print" onload="this.media='all'">
@@ -171,6 +171,9 @@ body::before{
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes cardIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pantyReturn{0%{transform:translateY(-30px) rotate(20deg);opacity:0}60%{transform:translateY(4px) rotate(-5deg)}100%{transform:translateY(0) rotate(0deg);opacity:1}}
+
+@keyframes bwAppear{from{transform:scale(.4) translateY(30px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 </style>
 </head>
 <body>
@@ -197,7 +200,7 @@ body::before{
 <div id="layer-name" class="layer active">
   <div class="page-title" style="margin-top:40px">
     <div class="badge">🌙 소요도서관 어린이 기자단</div>
-    <h1 style="font-size:28px;margin-top:6px">달빛 방탈출</h1>
+    <h1 style="font-size:20px;margin-top:6px;line-height:1.4">소요도서관 사건:<br>달빛 마법이 풀리기 전에</h1>
     <div style="font-size:13px;color:var(--panty);margin-top:6px;letter-spacing:1px">— 3일차 · 오싹오싹 팬티 🩲 —</div>
   </div>
   <div class="card">
@@ -215,7 +218,7 @@ body::before{
         <div class="pid-avatar">🩲</div>
         <div>
           <div class="pid-name" id="pid-name-preview">?</div>
-          <div class="pid-role">🔍 달빛 취재 기자</div>
+          <div class="pid-role">🔍 달빛 수사 요원</div>
         </div>
       </div>
       <div class="pid-num">SOYO-2025</div>
@@ -228,7 +231,7 @@ body::before{
 <div id="layer-intro" class="layer hidden">
   <div class="page-title" style="margin-bottom:10px">
     <div class="badge">🌙 소요도서관 어린이 기자단</div>
-    <h1>달빛 방탈출</h1>
+    <h1 style="font-size:20px;line-height:1.4">소요도서관 사건:<br>달빛 마법이 풀리기 전에</h1>
   </div>
   <div class="card">
     <div class="press-id" style="margin-bottom:14px">
@@ -241,7 +244,7 @@ body::before{
         <div class="pid-avatar" style="width:36px;height:36px;font-size:18px">🩲</div>
         <div>
           <div class="pid-name" id="intro-name" style="font-size:18px"></div>
-          <div class="pid-role" style="font-size:11px">🔍 달빛 취재 기자</div>
+          <div class="pid-role" style="font-size:11px">🔍 달빛 수사 요원</div>
         </div>
       </div>
       <div class="pid-num">SOYO-2025</div>
@@ -584,6 +587,7 @@ function checkAnswer(idx,btn){
     score+=gained;renderHUD();
     foundPlaces.add(p.id);
     setTimeout(()=>unlockCode(foundPlaces.size-1),300);
+    if(foundPlaces.size===3 && !obs03shown){obs03shown=true;setTimeout(showObservation03,1200);}
     fb.className='feedback ok show';
     document.getElementById('fb-icon').textContent='🩲';
     document.getElementById('fb-t').textContent=p.ok+(combo>=2?` 🔥 ${combo}콤보!`:'');
@@ -680,6 +684,23 @@ function unlockCode(idx){
   }
 }
 
+
+function showObservation03(){
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `position:fixed;inset:0;background:#00000088;z-index:9999;display:flex;align-items:center;justify-content:center`;
+  overlay.innerHTML = `
+    <div style="background:#050410;border:1px solid #2a2050;border-radius:16px;padding:28px 32px;max-width:320px;text-align:center;font-family:'Nanum Gothic',sans-serif">
+      <div style="font-size:10px;letter-spacing:3px;color:#5040a0;margin-bottom:14px">[ 관측 기록 03 ]</div>
+      <div style="font-size:14px;color:#c0b8e8;line-height:1.9">
+        새로운 사실이 확인되었습니다.<br><br>
+        이 생명체는 책이 펼쳐질 때마다<br>가까워지고 있습니다.
+      </div>
+      <div style="margin-top:18px;font-size:11px;color:#3a2a6a">— 탭하면 닫힘 —</div>
+    </div>`;
+  overlay.onclick = () => overlay.remove();
+  document.body.appendChild(overlay);
+}
+let obs03shown = false;
 function showComboPopup(n){
   const el=document.getElementById('combo-popup');
   el.textContent=`🔥 ${n}콤보!`;el.style.opacity='1';
@@ -713,7 +734,7 @@ async function sendResultEmail(name,sc,lv,rank){
     await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         subject:`[${name}] 소요도서관 달빛독서 기본`,
-        body:`====================\n[소요도서관 달빛 방탈출 결과]\n====================\n기자 이름: ${name}\n완료 시각: ${now}\n오늘 일차: ${todayDay}일차\n최종 점수: ${sc}점\n남은 목숨: ${lv}개 남음\n등급: ${rank.replace(/[^\w\s가-힣]/g,'').trim()}\n\n오늘 획득한 단어: ${todayWord}\n====================\n소요도서관 달빛 취재 게임 자동 발송`
+        body:`====================\n[소요도서관 소요도서관 사건: 달빛 마법이 풀리기 전에 결과]\n====================\n기자 이름: ${name}\n완료 시각: ${now}\n오늘 일차: ${todayDay}일차\n최종 점수: ${sc}점\n남은 목숨: ${lv}개 남음\n등급: ${rank.replace(/[^\w\s가-힣]/g,'').trim()}\n\n오늘 획득한 단어: ${todayWord}\n====================\n소요도서관 달빛 취재 게임 자동 발송`
       })});
     el.textContent='✅ 선생님께 결과가 전송됐어요!';el.style.color='var(--green)';
   }catch{

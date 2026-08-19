@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>달빛 방탈출 2일차 💩 소요도서관</title>
+<title>소요도서관 사건: 달빛 마법이 풀리기 전에 · 2일차 🌙</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic:wght@400;700;800&display=swap" media="print" onload="this.media='all'">
@@ -160,6 +160,9 @@ body::before{
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes cardIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes poopDrop{0%{transform:translateY(-20px);opacity:0}60%{transform:translateY(4px)}100%{transform:translateY(0);opacity:1}}
+
+@keyframes bwAppear{from{transform:scale(.4) translateY(30px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 </style>
 </head>
 <body>
@@ -186,7 +189,7 @@ body::before{
 <div id="layer-name" class="layer active">
   <div class="page-title" style="margin-top:40px">
     <div class="badge">🌙 소요도서관 어린이 기자단</div>
-    <h1 style="font-size:28px;margin-top:6px">달빛 방탈출</h1>
+    <h1 style="font-size:20px;margin-top:6px;line-height:1.4">소요도서관 사건:<br>달빛 마법이 풀리기 전에</h1>
     <div style="font-size:13px;color:var(--moon);margin-top:6px;letter-spacing:1px">— 2일차 · 똥벼락 💩 —</div>
   </div>
   <div class="card">
@@ -204,7 +207,7 @@ body::before{
         <div class="pid-avatar">💩</div>
         <div>
           <div class="pid-name" id="pid-name-preview">?</div>
-          <div class="pid-role">🌾 달빛 취재 기자</div>
+          <div class="pid-role">🌾 달빛 수사 요원</div>
         </div>
       </div>
       <div class="pid-num">SOYO-2025</div>
@@ -217,7 +220,7 @@ body::before{
 <div id="layer-intro" class="layer hidden">
   <div class="page-title" style="margin-bottom:10px">
     <div class="badge">🌙 소요도서관 어린이 기자단</div>
-    <h1>달빛 방탈출</h1>
+    <h1 style="font-size:20px;line-height:1.4">소요도서관 사건:<br>달빛 마법이 풀리기 전에</h1>
   </div>
   <div class="card">
     <div class="press-id" style="margin-bottom:14px">
@@ -230,7 +233,7 @@ body::before{
         <div class="pid-avatar" style="width:36px;height:36px;font-size:18px">💩</div>
         <div>
           <div class="pid-name" id="intro-name" style="font-size:18px"></div>
-          <div class="pid-role" style="font-size:11px">🌾 달빛 취재 기자</div>
+          <div class="pid-role" style="font-size:11px">🌾 달빛 수사 요원</div>
         </div>
       </div>
       <div class="pid-num">SOYO-2025</div>
@@ -291,7 +294,12 @@ body::before{
     <div class="village-square">
       <div class="village-title">🏘️ 돌쇠네 마을 광장</div>
       <div class="village-desc">수상한 것을 목격한 주민을 찾아봐요!<br>이름을 클릭해서 이야기를 들어보세요.</div>
-      <div class="village-chars" id="village-chars"></div>
+      <div style="position:relative">
+<div id="bw2-wrap" style="position:absolute;bottom:10px;right:12px;cursor:pointer;opacity:0.55;transition:opacity .2s" onclick="showObservation02()" title="">
+  <svg width="44" height="60" viewBox="-70 -100 140 160">
+    <polygon points="0.0,-40.6 9.1,-13.3 38.5,-13.3 16.1,4.9 24.5,32.2 0.0,17.5 -24.5,32.2 -16.1,4.9 -38.5,-13.3 -9.1,-13.3" fill="white" stroke="#cccccc" stroke-width="1.2"/><line x1="-6.3" y1="-39.2" x2="-12.6" y2="-54.6" stroke="#cccccc" stroke-width="1.26" stroke-linecap="round"/><circle cx="-12.6" cy="-56.7" r="2.8" fill="white" stroke="#cccccc" stroke-width="1.2"/><line x1="6.3" y1="-39.2" x2="12.6" y2="-54.6" stroke="#cccccc" stroke-width="1.26" stroke-linecap="round"/><circle cx="12.6" cy="-56.7" r="2.8" fill="white" stroke="#cccccc" stroke-width="1.2"/><line x1="-35.0" y1="-8.4" x2="-46.2" y2="-15.4" stroke="#cccccc" stroke-width="1.26" stroke-linecap="round"/><line x1="-25.2" y1="23.8" x2="-32.2" y2="35.0" stroke="#cccccc" stroke-width="1.26" stroke-linecap="round"/><line x1="35.0" y1="-8.4" x2="46.2" y2="-15.4" stroke="#cccccc" stroke-width="1.26" stroke-linecap="round"/><line x1="25.2" y1="23.8" x2="32.2" y2="35.0" stroke="#cccccc" stroke-width="1.26" stroke-linecap="round"/><circle cx="-9.1" cy="-2.8" r="3.5" fill="#1a1a1a"/><circle cx="9.1" cy="-2.8" r="3.5" fill="#1a1a1a"/><circle cx="-7.7" cy="-4.2" r="1.8" fill="white"/><circle cx="10.5" cy="-4.2" r="1.8" fill="white"/>
+  </svg>
+</div><div class="village-chars" id="village-chars"></div></div>
       <div class="village-progress">
         탐문 완료: <span id="talked-count" style="color:var(--moon);font-family:'Jua',sans-serif">0</span> / 5명
       </div>
@@ -685,6 +693,22 @@ function unlockCode(idx){
   }
 }
 
+
+function showObservation02(){
+  document.getElementById('bw2-wrap').style.display='none';
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `position:fixed;inset:0;background:#00000088;z-index:9999;display:flex;align-items:center;justify-content:center`;
+  overlay.innerHTML = `
+    <div style="background:#050410;border:1px solid #2a2050;border-radius:16px;padding:28px 32px;max-width:320px;text-align:center;font-family:'Nanum Gothic',sans-serif">
+      <div style="font-size:10px;letter-spacing:3px;color:#5040a0;margin-bottom:14px">[ 관측 기록 02 ]</div>
+      <div style="font-size:14px;color:#c0b8e8;line-height:1.9">
+        미확인 생명체가 탐정단의<br>독서 활동을<br>관찰하고 있는 것으로<br>보입니다.
+      </div>
+      <div style="margin-top:18px;font-size:11px;color:#3a2a6a">— 탭하면 닫힘 —</div>
+    </div>`;
+  overlay.onclick = () => overlay.remove();
+  document.body.appendChild(overlay);
+}
 function showComboPopup(n){
   const el=document.getElementById('combo-popup');
   el.textContent=`🔥 ${n}콤보!`;el.style.opacity='1';
@@ -718,7 +742,7 @@ async function sendResultEmail(name,sc,lv,rank){
     await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         subject:`[${name}] 소요도서관 달빛독서 기본`,
-        body:`====================\n[소요도서관 달빛 방탈출 결과]\n====================\n기자 이름: ${name}\n완료 시각: ${now}\n오늘 일차: ${todayDay}일차\n최종 점수: ${sc}점\n남은 목숨: ${lv}개 남음\n등급: ${rank.replace(/[^\w\s가-힣]/g,'').trim()}\n\n오늘 획득한 단어: ${todayWord}\n====================\n소요도서관 달빛 취재 게임 자동 발송`
+        body:`====================\n[소요도서관 소요도서관 사건: 달빛 마법이 풀리기 전에 결과]\n====================\n기자 이름: ${name}\n완료 시각: ${now}\n오늘 일차: ${todayDay}일차\n최종 점수: ${sc}점\n남은 목숨: ${lv}개 남음\n등급: ${rank.replace(/[^\w\s가-힣]/g,'').trim()}\n\n오늘 획득한 단어: ${todayWord}\n====================\n소요도서관 달빛 취재 게임 자동 발송`
       })});
     el.textContent='✅ 선생님께 결과가 전송됐어요!';el.style.color='var(--green)';
   }catch{
