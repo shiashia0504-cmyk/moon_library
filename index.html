@@ -7,10 +7,10 @@
 <script>
 // ★★★ 선생님이 매일 바꾸는 곳 ★★★
 const CONFIG = {
-  gameFile:  'day4-dragon.html',   // 오늘 게임 파일명
-  zoomLink:  '',                     // 오늘 ZOOM 링크 (없으면 '')
-  today:     4,                      // 오늘 일차 (1~5)
-  todayDate: '9월 17일 (목)',        // 화면에 표시할 날짜
+  gameFile:  'day1-pigbook.html',   // 오늘 게임 파일명
+  meetLink:  '',                     // 오늘 Google Meet 링크 (없으면 '')
+  today:     1,                      // 오늘 일차 (1~5)
+  todayDate: '9월 28일 (일)',        // 화면에 표시할 날짜
   isActive:  true,                   // 행사 종료 후 false로
 };
 // ★★★★★★★★★★★★★★★★★
@@ -94,7 +94,7 @@ const DAYS = [
 ];
 
 function render(){
-  const {gameFile, zoomLink, today, todayDate, isActive} = CONFIG;
+  const {gameFile, meetLink, today, todayDate, isActive} = CONFIG;
   const app = document.getElementById('app');
   const d = DAYS[today-1];
 
@@ -119,19 +119,19 @@ function render(){
   ).join('');
 
   // 줌 버튼
-  const zoomBtn = zoomLink
-    ? `<a href="${zoomLink}" target="_blank" class="btn btn-zoom">
+  const zoomBtn = meetLink
+    ? `<a href="${meetLink}" target="_blank" class="btn btn-zoom">
         <span class="btn-icon">📹</span>
         <div class="btn-body">
-          <div class="btn-main">ZOOM 입장하기</div>
-          <div class="btn-sub">선생님과 함께 실시간 참여!</div>
+          <div class="btn-main">선생님 만나러 가기</div>
+          <div class="btn-sub">Google Meet으로 함께해요!</div>
         </div>
       </a>`
     : `<div class="btn btn-zoom off">
         <span class="btn-icon">📹</span>
         <div class="btn-body">
-          <div class="btn-main">ZOOM 링크 준비 중</div>
-          <div class="btn-sub">행사 시작 전 업데이트 예정</div>
+          <div class="btn-main">선생님 만나러 가기 준비 중</div>
+          <div class="btn-sub">잠시 후 열릴 예정이에요</div>
         </div>
       </div>`;
 
