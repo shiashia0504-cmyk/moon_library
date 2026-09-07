@@ -8,9 +8,9 @@
 // ★★★ 선생님이 매일 바꾸는 곳 ★★★
 const CONFIG = {
   gameFile:  'day1-pigbook.html',   // 오늘 게임 파일명
-  meetLink:  'https://meet.google.com/mvd-sxix-awn',                     // 오늘 Google Meet 링크 (없으면 '')
+  meetLink:  '',                     // 오늘 Google Meet 링크 (없으면 '')
   today:     1,                      // 오늘 일차 (1~5)
-  todayDate: '9월 14일 (월)',        // 화면에 표시할 날짜
+  todayDate: '9월 28일 (일)',        // 화면에 표시할 날짜
   isActive:  true,                   // 행사 종료 후 false로
 };
 // ★★★★★★★★★★★★★★★★★
@@ -22,7 +22,7 @@ body{
   background:#050410;color:#e8e0ff;
   min-height:100vh;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  padding:24px 16px;position:relative;overflow:hidden;
+  padding:16px 16px;position:relative;overflow:hidden;
 }
 body::before{
   content:'';position:fixed;inset:0;
@@ -34,25 +34,25 @@ body::before{
 .star{position:fixed;border-radius:50%;background:#fff;animation:twinkle 3s ease-in-out infinite}
 @keyframes twinkle{0%,100%{opacity:.15}50%{opacity:.9}}
 
-.container{width:100%;max-width:400px;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:14px}
-.org-badge{font-size:11px;letter-spacing:2px;color:#9080c8;border:1px solid #3a2a6a;padding:4px 14px;border-radius:20px;background:#080618}
-.moon{font-size:54px;line-height:1;animation:moonFloat 4s ease-in-out infinite}
-@keyframes moonFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.container{width:100%;max-width:400px;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:10px}
+.org-badge{font-size:11px;letter-spacing:2px;color:#9080c8;border:1px solid #3a2a6a;padding:3px 14px;border-radius:20px;background:#080618}
+.moon{font-size:42px;line-height:1;animation:moonFloat 4s ease-in-out infinite}
+@keyframes moonFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 
-.title{font-size:30px;font-weight:900;color:#fff;text-shadow:0 0 30px #a060ff66;letter-spacing:-1px;text-align:center;line-height:1.2}
-.title2{font-size:15px;font-weight:700;color:#b0a8e0;text-align:center;margin-top:-4px;letter-spacing:-0.3px}
-.subtitle{font-size:13px;color:#6858a0;text-align:center}
+.title{font-size:26px;font-weight:900;color:#fff;text-shadow:0 0 30px #a060ff66;letter-spacing:-1px;text-align:center;line-height:1.2}
+.title2{font-size:13px;font-weight:700;color:#b0a8e0;text-align:center;margin-top:-2px;letter-spacing:-0.3px}
+.subtitle{font-size:12px;color:#6858a0;text-align:center}
 
-.today-card{width:100%;background:linear-gradient(135deg,#0c0820,#14103a);border:1.5px solid #3a2a6a;border-radius:16px;padding:16px 18px;text-align:center}
-.today-label{font-size:9px;color:#5848a0;letter-spacing:3px;margin-bottom:6px}
-.today-day{font-size:20px;font-weight:900;color:#f7e96a;margin-bottom:3px}
-.today-date{font-size:12px;color:#7868a8;margin-bottom:10px}
-.day-dots{display:flex;justify-content:center;gap:5px;flex-wrap:wrap}
-.dot{font-size:10px;padding:3px 7px;border-radius:10px;background:#0e0a28;border:1px solid #2a1a4a;color:#504880}
+.today-card{width:100%;background:linear-gradient(135deg,#0c0820,#14103a);border:1.5px solid #3a2a6a;border-radius:14px;padding:12px 16px;text-align:center}
+.today-label{font-size:9px;color:#5848a0;letter-spacing:3px;margin-bottom:4px}
+.today-day{font-size:18px;font-weight:900;color:#f7e96a;margin-bottom:2px}
+.today-date{font-size:11px;color:#7868a8;margin-bottom:8px}
+.day-dots{display:flex;justify-content:center;gap:4px;flex-wrap:wrap}
+.dot{font-size:9px;padding:2px 6px;border-radius:10px;background:#0e0a28;border:1px solid #2a1a4a;color:#504880}
 .dot.active{background:#1e1040;border-color:#f7e96a;color:#f7e96a;font-weight:700}
 .dot.done{background:#102010;border-color:#4ade80;color:#4ade80}
 
-.btn{width:100%;padding:18px 20px;border:none;border-radius:16px;color:#fff;font-size:16px;font-weight:900;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px;text-decoration:none}
+.btn{width:100%;padding:15px 18px;border:none;border-radius:14px;color:#fff;font-size:15px;font-weight:900;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px;text-decoration:none}
 .btn:hover{transform:translateY(-2px)}
 .btn:active{transform:translateY(0)}
 .btn-game{background:linear-gradient(135deg,#3b0764,#7e22ce,#a855f7);box-shadow:0 6px 28px #a855f744}
@@ -61,13 +61,13 @@ body::before{
 .btn-zoom:hover{box-shadow:0 10px 36px #3b82f655}
 .btn-zoom.off{background:linear-gradient(135deg,#151525,#1e1e38);box-shadow:none;opacity:.5;cursor:default}
 .btn-zoom.off:hover{transform:none}
-.btn-icon{font-size:26px;flex-shrink:0}
+.btn-icon{font-size:22px;flex-shrink:0}
 .btn-body{display:flex;flex-direction:column;align-items:flex-start}
-.btn-main{font-size:17px;font-weight:900;line-height:1.2}
-.btn-sub{font-size:10px;opacity:.72;font-weight:400;margin-top:2px}
+.btn-main{font-size:15px;font-weight:900;line-height:1.2}
+.btn-sub{font-size:10px;opacity:.72;font-weight:400;margin-top:1px}
 
-.footer{font-size:11px;color:#302850;text-align:center;line-height:1.6}
-.ended{text-align:center;padding:24px 20px;background:#0c0820;border-radius:16px;border:1.5px solid #3a2a6a}
+.footer{font-size:10px;color:#302850;text-align:center;line-height:1.6}
+.ended{text-align:center;padding:20px;background:#0c0820;border-radius:16px;border:1.5px solid #3a2a6a}
 </style>
 </head>
 <body>
@@ -149,6 +149,8 @@ function render(){
       <div class="day-dots">${dots}</div>
     </div>
 
+    ${zoomBtn}
+
     <a href="${gameFile}" class="btn btn-game">
       <span class="btn-icon">🎮</span>
       <div class="btn-body">
@@ -156,8 +158,6 @@ function render(){
         <div class="btn-sub">방탈출 게임으로 비밀 단어를 획득하세요</div>
       </div>
     </a>
-
-    ${zoomBtn}
 
     <div class="footer">
       저녁 7:30 ~ 8:00 · ZOOM 실시간<br>
