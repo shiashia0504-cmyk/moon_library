@@ -8,9 +8,9 @@
 // ★★★ 선생님이 매일 바꾸는 곳 ★★★
 const CONFIG = {
   gameFile:  'day1-pigbook.html',   // 오늘 게임 파일명
-  meetLink:  'https://meet.google.com/mvd-sxix-awn',                     // 오늘 Google Meet 링크 (없으면 '')
+  meetLink:  '',                     // 오늘 Google Meet 링크 (없으면 '')
   today:     1,                      // 오늘 일차 (1~5)
-  todayDate: '9월 14일 (월)',        // 화면에 표시할 날짜
+  todayDate: '9월 28일 (일)',        // 화면에 표시할 날짜
   isActive:  true,                   // 행사 종료 후 false로
 };
 // ★★★★★★★★★★★★★★★★★
@@ -67,6 +67,15 @@ body::before{
 .btn-sub{font-size:10px;opacity:.72;font-weight:400;margin-top:1px}
 
 .footer{font-size:10px;color:#302850;text-align:center;line-height:1.6}
+.btn-chat{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 18px;border-radius:20px;
+  background:#1a1030;border:1px solid #3a2a6a;
+  color:#9080c8;font-size:12px;font-weight:700;
+  text-decoration:none;transition:all .2s;
+  cursor:pointer;
+}
+.btn-chat:hover{background:#241840;border-color:#6050a0;color:#c0b0e8;transform:translateY(-1px)}
 .ended{text-align:center;padding:20px;background:#0c0820;border-radius:16px;border:1.5px solid #3a2a6a}
 </style>
 </head>
@@ -160,9 +169,13 @@ function render(){
     </a>
 
     <div class="footer">
-      저녁 7:30 ~ 8:00 · ZOOM 실시간<br>
+      저녁 7:30 ~ 8:00 · Google Meet 실시간<br>
       소요도서관 어린이 기자단 · 2025
-    </div>`;
+    </div>
+
+    <a href="https://open.kakao.com/o/sf8TDuNi" target="_blank" class="btn-chat">
+      💬 문의하기 (오픈채팅)
+    </a>`;
 }
 
 render();
